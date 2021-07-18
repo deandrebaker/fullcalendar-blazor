@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{883F0234-B33C-4BA2-A6F3-86FDD324365F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullCalendar", "src\FullCalendar\FullCalendar.csproj", "{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,5 +18,22 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Debug|x64.Build.0 = Debug|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Debug|x86.Build.0 = Debug|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Release|x64.ActiveCfg = Release|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Release|x64.Build.0 = Release|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Release|x86.ActiveCfg = Release|Any CPU
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7A49FF6B-8F13-44AF-B62F-9E30BC9CA920} = {883F0234-B33C-4BA2-A6F3-86FDD324365F}
 	EndGlobalSection
 EndGlobal
