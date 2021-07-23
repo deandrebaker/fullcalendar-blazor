@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace FullCalendar.Test
+namespace FullCalendarTest
 {
     public class Tests
     {

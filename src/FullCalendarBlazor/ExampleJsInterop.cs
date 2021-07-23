@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-namespace FullCalendar
+namespace FullCalendarBlazor
 {
     // This class provides an example of how JavaScript functionality can be wrapped
     // in a .NET class for easy consumption. The associated JavaScript module is
@@ -18,7 +18,7 @@ namespace FullCalendar
         public ExampleJsInterop(IJSRuntime jsRuntime)
         {
             moduleTask = new (() => jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import", "./_content/FullCalendar/exampleJsInterop.js").AsTask());
+                "import", "./_content/FullCalendarBlazor/exampleJsInterop.js").AsTask());
         }
 
         public async ValueTask<string> Prompt(string message)
