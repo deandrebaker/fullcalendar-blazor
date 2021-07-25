@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FullCalendarBlazor.JsInterops;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace FullCalendarBlazor
+namespace FullCalendarBlazor.Services
 {
     public static class FullCalendarServiceExtensions
     {

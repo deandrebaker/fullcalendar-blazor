@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FullCalendarBlazor.JsInterops;
 using Microsoft.AspNetCore.Components;
 
 namespace FullCalendarBlazor

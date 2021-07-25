@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-namespace FullCalendarBlazor
+namespace FullCalendarBlazor.JsInterops
 {
     public class FullCalendarJsInterop : IFullCalendarJsInterop, IAsyncDisposable
     {
