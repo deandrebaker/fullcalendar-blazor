@@ -4,6 +4,6 @@ namespace FullCalendarBlazor
 {
     public interface IFullCalendarJsInterop
     {
-        ValueTask Render();
+        ValueTask Render(string elementId);
     }
 }

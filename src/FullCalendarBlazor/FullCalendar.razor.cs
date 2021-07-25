@@ -5,14 +5,14 @@ namespace FullCalendarBlazor
 {
     public partial class FullCalendar
     {
-        [Inject]
-        private IFullCalendarJsInterop JsInterop { get; set; }
+        [Inject] private IFullCalendarJsInterop JsInterop { get; set; }
+        [Parameter] public string Id { get; set; }
         
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                await JsInterop.Render();
+                await JsInterop.Render(Id);
             }
         }
     }

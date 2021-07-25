@@ -14,10 +14,10 @@ namespace FullCalendarBlazor
                 "import", "./_content/FullCalendarBlazor/fullCalendarJsInterop.js").AsTask());
         }
 
-        public async ValueTask Render()
+        public async ValueTask Render(string elementId)
         {
             var module = await _moduleTask.Value;
-            await module.InvokeVoidAsync("render");
+            await module.InvokeVoidAsync("render", elementId);
         }
 
         public async ValueTask DisposeAsync()
