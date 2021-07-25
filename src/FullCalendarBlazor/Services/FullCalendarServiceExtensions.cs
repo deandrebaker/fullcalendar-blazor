@@ -1,5 +1,4 @@
-﻿using FullCalendarBlazor.JsInterops;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace FullCalendarBlazor.Services
 {
@@ -7,7 +6,7 @@ namespace FullCalendarBlazor.Services
     {
         public static IServiceCollection AddFullCalendar(this IServiceCollection services)
         {
-            services.AddSingleton<IFullCalendarJsInterop, FullCalendarJsInterop>();
+            services.AddSingleton<IJSRuntimeService, JSRuntimeService>();
             return services;
         }
     }

@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FullCalendarBlazor.Models;
 using Microsoft.JSInterop;
 
-namespace FullCalendarBlazor.JsInterops
+namespace FullCalendarBlazor.Services
 {
-    public class FullCalendarJsInterop : IFullCalendarJsInterop, IAsyncDisposable
+    public class JSRuntimeService : IJSRuntimeService, IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
         
-        public FullCalendarJsInterop(IJSRuntime jsRuntime)
+        public JSRuntimeService(IJSRuntime jsRuntime)
         {
             _moduleTask = new (() => jsRuntime.InvokeAsync<IJSObjectReference>(
                 "import", "./_content/FullCalendarBlazor/fullCalendarJsInterop.js").AsTask());
         }
 
-        public async ValueTask Render(string elementId)
+        public async ValueTask Render(string elementId, FullCalendarData data)
         {
             var module = await _moduleTask.Value;
-            await module.InvokeVoidAsync("render", elementId);
+            await module.InvokeVoidAsync("render", elementId, data);
         }
 
         public async ValueTask DisposeAsync()
