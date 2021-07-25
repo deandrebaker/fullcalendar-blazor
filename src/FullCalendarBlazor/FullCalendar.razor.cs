@@ -14,14 +14,8 @@ namespace FullCalendarBlazor
         [Parameter] public IEnumerable Events { get; set; }
         private FullCalendarData Data { get; set; }
 
-        private void ValidateParameters()
-        {
-            Events ??= Enumerable.Empty<Event>();
-        }
-
         protected override void OnInitialized()
         {
-            ValidateParameters();
             Data = new FullCalendarData {Events = Events};
         }
 
