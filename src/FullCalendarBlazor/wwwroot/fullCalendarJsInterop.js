@@ -1,4 +1,4 @@
-﻿import { FullCalendar } from "./fullcalendar/main.min.js";
+﻿import {FullCalendar} from "./fullcalendar/main.min.js";
 
 export function render(elementId, data) {
     var calendarElement = document.getElementById(elementId);
