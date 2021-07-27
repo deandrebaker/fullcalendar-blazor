@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace FullCalendarBlazor
+namespace FullCalendarBlazor.Services
 {
     public static class FullCalendarServiceExtensions
     {
         public static IServiceCollection AddFullCalendar(this IServiceCollection services)
         {
-            services.AddSingleton<IFullCalendarJsInterop, FullCalendarJsInterop>();
+            services.AddSingleton<IJSRuntimeService, JSRuntimeService>();
             return services;
         }
     }
