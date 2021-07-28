@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
-
-namespace FullCalendarBlazor.Models.Events
+﻿namespace FullCalendarBlazor.Models.Events
 {
+    // Todo: Add types to properties with object types.
     public class EventActionArgs
     {
         public Event Event { get; set; }
