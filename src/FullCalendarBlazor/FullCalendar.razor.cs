@@ -1,9 +1,11 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System;
+using System.Collections;
 using System.Threading.Tasks;
 using FullCalendarBlazor.Models;
+using FullCalendarBlazor.Models.Events;
 using FullCalendarBlazor.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace FullCalendarBlazor
 {
@@ -12,19 +14,21 @@ namespace FullCalendarBlazor
         [Inject] private IJSRuntimeService JsInterop { get; set; }
         [Parameter] public string Id { get; set; }
         [Parameter] public IEnumerable Events { get; set; }
-        private FullCalendarData Data { get; set; }
+        [Parameter] public Action<EventActionArgs> OnEventClick { get; set; }
 
-        protected override void OnInitialized()
+        [JSInvokable]
+        public void EventClick(EventActionArgs e)
         {
-            Data = new FullCalendarData {Events = Events};
+            OnEventClick?.Invoke(e);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            var data = new FullCalendarData
             {
-                await JsInterop.Render(Id, Data);
-            }
+                Events = Events
+            };
+            await JsInterop.Render(Id, data, DotNetObjectReference.Create(this));
         }
     }
 }
