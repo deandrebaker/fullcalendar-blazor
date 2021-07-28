@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FullCalendarBlazor.Models
+namespace FullCalendarBlazor.Models.Events
 {
     /// <summary>
     /// See https://fullcalendar.io/docs/event-parsing for more information.

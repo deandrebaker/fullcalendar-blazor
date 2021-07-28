@@ -1,4 +1,4 @@
-﻿namespace FullCalendarBlazor.Models
+﻿namespace FullCalendarBlazor.Models.Events
 {
     public class EventDisplay
     {
