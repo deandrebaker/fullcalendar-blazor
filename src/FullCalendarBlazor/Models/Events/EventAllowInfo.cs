@@ -5,7 +5,7 @@ namespace FullCalendarBlazor.Models.Events
     /// <summary>
     /// See https://fullcalendar.io/docs/eventAllow for more information.
     /// </summary>
-    public class DropInfo
+    public class EventAllowInfo
     {
         public bool AllDay { get; set; }
         public DateTime End { get; set; }

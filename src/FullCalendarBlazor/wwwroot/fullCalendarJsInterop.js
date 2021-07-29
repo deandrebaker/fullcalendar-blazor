@@ -8,7 +8,7 @@ export function render(elementId, serializedData, objRef) {
     calendarData.eventMouseEnter = (mouseEnterInfo) => objRef.invokeMethod('EventMouseEnter', mouseEnterInfo);
     calendarData.eventMouseLeave = (mouseLeaveInfo) => objRef.invokeMethod('EventMouseLeave', mouseLeaveInfo);
     calendarData.eventOverlap = (stillEvent, movingEvent) => objRef.invokeMethod('EventOverlap', stillEvent, movingEvent);
-    calendarData.eventAllow = (dropInfo, draggedEvent) => objRef.invokeMethod('EventAllow', dropInfo, draggedEvent);
+    calendarData.eventAllow = (eventAllowInfo, draggedEvent) => objRef.invokeMethod('EventAllow', eventAllowInfo, draggedEvent);
     calendarData.dropAccept = (draggableEl) => objRef.invokeMethod('DropAccept', draggableEl);
 
     var calendarElement = document.getElementById(elementId);
