@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FullCalendarBlazor.Models;
 using FullCalendarBlazor.Models.Events;
@@ -22,6 +23,10 @@ namespace FullCalendarBlazor
         [Parameter] public TimeSpan? DefaultAllDayEventDuration { get; set; }
         [Parameter] public TimeSpan? DefaultTimedEventDuration { get; set; }
         [Parameter] public bool? ForceEventDuration { get; set; }
+        [Parameter] public Action<EventAddInfo> OnEventAdd { get; set; }
+        [Parameter] public Action<EventChangeInfo> OnEventChange { get; set; }
+        [Parameter] public Action<EventAddInfo> OnEventRemove { get; set; }
+        [Parameter] public Action<IEnumerable<Event>> OnEventsSet { get; set; }
         [Parameter] public bool? Editable { get; set; }
         [Parameter] public bool? EventStartEditable { get; set; }
         [Parameter] public bool? EventResizableFromStart { get; set; }
@@ -52,6 +57,10 @@ namespace FullCalendarBlazor
         [Parameter] public Action<EventResizeInfo> OnEventResize { get; set; }
 
         // JSInvokable methods
+        [JSInvokable] public void EventAdd(EventAddInfo eventAddInfo) => OnEventAdd?.Invoke(eventAddInfo);
+        [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
+        [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
+        [JSInvokable] public void EventsSet(IEnumerable<Event> events) => OnEventsSet?.Invoke(events);
         [JSInvokable] public void EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
         [JSInvokable] public void EventMouseEnter(EventClickInfo mouseEnterInfo) => OnEventMouseEnter?.Invoke(mouseEnterInfo);
         [JSInvokable] public void EventMouseLeave(EventClickInfo mouseLeaveInfo) =>  OnEventMouseLeave?.Invoke(mouseLeaveInfo);
