@@ -41,6 +41,15 @@ namespace FullCalendarBlazor
         [Parameter] public object EventConstraint { get; set; }
         [Parameter] public Func<EventAllowInfo, Event, bool> OnEventAllow { get; set; }
         [Parameter] public Func<object, bool> OnDropAccept { get; set; }
+        [Parameter] public Action<EventDragInfo> OnEventDragStart { get; set; }
+        [Parameter] public Action<EventDragInfo> OnEventDragStop { get; set; }
+        [Parameter] public Action<EventDropInfo> OnEventDrop { get; set; }
+        [Parameter] public Action<DropInfo> OnDrop { get; set; }
+        [Parameter] public Action<ExternalEventDropInfo> OnEventReceive { get; set; }
+        [Parameter] public Action<ExternalEventDropInfo> OnEventLeave { get; set; }
+        [Parameter] public Action<EventDragInfo> OnEventResizeStart { get; set; }
+        [Parameter] public Action<EventDragInfo> OnEventResizeStop { get; set; }
+        [Parameter] public Action<EventResizeInfo> OnEventResize { get; set; }
 
         // JSInvokable methods
         [JSInvokable] public void EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
@@ -49,6 +58,15 @@ namespace FullCalendarBlazor
         [JSInvokable] public bool EventOverlap(Event stillEvent, Event movingEvent) => OnEventOverlap?.Invoke(stillEvent, movingEvent) ?? true;
         [JSInvokable] public bool EventAllow(EventAllowInfo eventAllowInfo, Event draggedEvent) => OnEventAllow?.Invoke(eventAllowInfo, draggedEvent) ?? true;
         [JSInvokable] public bool DropAccept(object draggableItem) => OnDropAccept?.Invoke(draggableItem) ?? true; // Todo: Replace object with DraggableItem type.
+        [JSInvokable] public void EventDragStart(EventDragInfo eventDragInfo) => OnEventDragStart?.Invoke(eventDragInfo);
+        [JSInvokable] public void EventDragStop(EventDragInfo eventDragInfo) => OnEventDragStop?.Invoke(eventDragInfo);
+        [JSInvokable] public void EventDrop(EventDropInfo eventDropInfo) => OnEventDrop?.Invoke(eventDropInfo);
+        [JSInvokable] public void Drop(DropInfo dropInfo) => OnDrop?.Invoke(dropInfo);
+        [JSInvokable] public void EventReceive(ExternalEventDropInfo eventReceiveInfo) => OnEventReceive?.Invoke(eventReceiveInfo);
+        [JSInvokable] public void EventLeave(ExternalEventDropInfo eventLeaveInfo) => OnEventLeave?.Invoke(eventLeaveInfo);
+        [JSInvokable] public void EventResizeStart(EventDragInfo eventResizeInfo) => OnEventResizeStart?.Invoke(eventResizeInfo);
+        [JSInvokable] public void EventResizeStop(EventDragInfo eventResizeInfo) => OnEventResizeStop?.Invoke(eventResizeInfo);
+        [JSInvokable] public void EventResizeStop(EventResizeInfo eventResizeInfo) => OnEventResize?.Invoke(eventResizeInfo);
 
         // Lifecycle methods
         protected override async Task OnAfterRenderAsync(bool firstRender)
