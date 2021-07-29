@@ -22,5 +22,6 @@ namespace FullCalendarBlazor.Models
         public TimeSpan? SnapDuration  { get; set; }
         public bool? AllDayMaintainDuration { get; set; }
         // Todo: Add FixedMirrorParent property
+        public object EventConstraint { get; set; }
     }
 }

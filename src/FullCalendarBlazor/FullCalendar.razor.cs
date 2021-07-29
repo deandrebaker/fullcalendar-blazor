@@ -11,7 +11,10 @@ namespace FullCalendarBlazor
 {
     public partial class FullCalendar
     {
+        // Injected Dependencies
         [Inject] private IJSRuntimeService JsInterop { get; set; }
+
+        // Parameters
         [Parameter] public string Id { get; set; }
         [Parameter] public IEnumerable Events { get; set; }
         // Todo: Add EventDataTransform delegate for transforming events from a source (https://fullcalendar.io/docs/eventDataTransform)
@@ -25,33 +28,29 @@ namespace FullCalendarBlazor
         [Parameter] public bool? EventDurationEditable { get; set; }
         [Parameter] public bool? EventResourceEditable { get; set; }
         [Parameter] public bool? Droppable { get; set; }
+        [Parameter] public Action<EventActionArgs> OnEventClick { get; set; }
+        [Parameter] public Action<EventActionArgs> OnEventMouseEnter { get; set; }
+        [Parameter] public Action<EventActionArgs> OnEventMouseLeave { get; set; }
         [Parameter] public int? EventDragMinDistance { get; set; }
         [Parameter] public int? DragRevertDuration { get; set; }
         [Parameter] public bool? DragScroll { get; set; }
         [Parameter] public TimeSpan? SnapDuration  { get; set; }
         [Parameter] public bool? AllDayMaintainDuration { get; set; }
-        [Parameter] public Action<EventActionArgs> OnEventClick { get; set; }
-        [Parameter] public Action<EventActionArgs> OnEventMouseEnter { get; set; }
-        [Parameter] public Action<EventActionArgs> OnEventMouseLeave { get; set; }
+        // Todo: Add FixedMirrorParent parameter (https://fullcalendar.io/docs/fixedMirrorParent)
+        [Parameter] public Func<Event, Event, bool> OnEventOverlap { get; set; }
+        [Parameter] public object EventConstraint { get; set; }
+        [Parameter] public Func<EventDropInfo, Event, bool> OnEventAllow { get; set; }
+        [Parameter] public Func<object, bool> OnDropAccept { get; set; }
 
-        [JSInvokable]
-        public void EventClick(EventActionArgs e)
-        {
-            OnEventClick?.Invoke(e);
-        }
+        // JSInvokable methods
+        [JSInvokable] public void EventClick(EventActionArgs e) => OnEventClick?.Invoke(e);
+        [JSInvokable] public void EventMouseEnter(EventActionArgs e) => OnEventMouseEnter?.Invoke(e);
+        [JSInvokable] public void EventMouseLeave(EventActionArgs e) =>  OnEventMouseLeave?.Invoke(e);
+        [JSInvokable] public bool EventOverlap(Event stillEvent, Event movingEvent) => OnEventOverlap?.Invoke(stillEvent, movingEvent) ?? true;
+        [JSInvokable] public bool EventAllow(EventDropInfo dropInfo, Event draggedEvent) => OnEventAllow?.Invoke(dropInfo, draggedEvent) ?? true;
+        [JSInvokable] public bool DropAccept(object draggableItem) => OnDropAccept?.Invoke(draggableItem) ?? true; // Todo: Replace object with DraggableItem type.
 
-        [JSInvokable]
-        public void EventMouseEnter(EventActionArgs e)
-        {
-            OnEventMouseEnter?.Invoke(e);
-        }
-
-        [JSInvokable]
-        public void EventMouseLeave(EventActionArgs e)
-        {
-            OnEventMouseLeave?.Invoke(e);
-        }
-
+        // Lifecycle methods
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             var data = new FullCalendarData
@@ -72,6 +71,7 @@ namespace FullCalendarBlazor
                 DragScroll = DragScroll,
                 SnapDuration = SnapDuration,
                 AllDayMaintainDuration = AllDayMaintainDuration,
+                EventConstraint = EventConstraint,
             };
             await JsInterop.Render(Id, data, DotNetObjectReference.Create(this));
         }

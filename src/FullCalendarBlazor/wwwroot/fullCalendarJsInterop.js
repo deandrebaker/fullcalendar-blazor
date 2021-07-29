@@ -2,19 +2,15 @@
 
 export function render(elementId, serializedData, objRef) {
     var calendarData = JSON.parse(serializedData);
-    
-    calendarData.eventClick = function(info) {
-        objRef.invokeMethodAsync('EventClick', info);
-    };
 
-    calendarData.eventMouseEnter = function(info) {
-        objRef.invokeMethodAsync('EventMouseEnter', info);
-    };
+    // Calendar functions
+    calendarData.eventClick = (eventClickInfo) => objRef.invokeMethod('EventClick', eventClickInfo);
+    calendarData.eventMouseEnter = (mouseEnterInfo) => objRef.invokeMethod('EventMouseEnter', mouseEnterInfo);
+    calendarData.eventMouseLeave = (mouseLeaveInfo) => objRef.invokeMethod('EventMouseLeave', mouseLeaveInfo);
+    calendarData.eventOverlap = (stillEvent, movingEvent) => objRef.invokeMethod('EventOverlap', stillEvent, movingEvent);
+    calendarData.eventAllow = (dropInfo, draggedEvent) => objRef.invokeMethod('EventAllow', dropInfo, draggedEvent);
+    calendarData.dropAccept = (draggableEl) => objRef.invokeMethod('DropAccept', draggableEl);
 
-    calendarData.eventMouseLeave = function(info) {
-        objRef.invokeMethodAsync('EventMouseLeave', info);
-    };
-    
     var calendarElement = document.getElementById(elementId);
     var calendar = new FullCalendar.Calendar(calendarElement, calendarData);
     calendar.render();
