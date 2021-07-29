@@ -28,9 +28,9 @@ namespace FullCalendarBlazor
         [Parameter] public bool? EventDurationEditable { get; set; }
         [Parameter] public bool? EventResourceEditable { get; set; }
         [Parameter] public bool? Droppable { get; set; }
-        [Parameter] public Action<EventActionArgs> OnEventClick { get; set; }
-        [Parameter] public Action<EventActionArgs> OnEventMouseEnter { get; set; }
-        [Parameter] public Action<EventActionArgs> OnEventMouseLeave { get; set; }
+        [Parameter] public Action<EventClickInfo> OnEventClick { get; set; }
+        [Parameter] public Action<EventClickInfo> OnEventMouseEnter { get; set; }
+        [Parameter] public Action<EventClickInfo> OnEventMouseLeave { get; set; }
         [Parameter] public int? EventDragMinDistance { get; set; }
         [Parameter] public int? DragRevertDuration { get; set; }
         [Parameter] public bool? DragScroll { get; set; }
@@ -43,9 +43,9 @@ namespace FullCalendarBlazor
         [Parameter] public Func<object, bool> OnDropAccept { get; set; }
 
         // JSInvokable methods
-        [JSInvokable] public void EventClick(EventActionArgs e) => OnEventClick?.Invoke(e);
-        [JSInvokable] public void EventMouseEnter(EventActionArgs e) => OnEventMouseEnter?.Invoke(e);
-        [JSInvokable] public void EventMouseLeave(EventActionArgs e) =>  OnEventMouseLeave?.Invoke(e);
+        [JSInvokable] public void EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
+        [JSInvokable] public void EventMouseEnter(EventClickInfo mouseEnterInfo) => OnEventMouseEnter?.Invoke(mouseEnterInfo);
+        [JSInvokable] public void EventMouseLeave(EventClickInfo mouseLeaveInfo) =>  OnEventMouseLeave?.Invoke(mouseLeaveInfo);
         [JSInvokable] public bool EventOverlap(Event stillEvent, Event movingEvent) => OnEventOverlap?.Invoke(stillEvent, movingEvent) ?? true;
         [JSInvokable] public bool EventAllow(EventDropInfo dropInfo, Event draggedEvent) => OnEventAllow?.Invoke(dropInfo, draggedEvent) ?? true;
         [JSInvokable] public bool DropAccept(object draggableItem) => OnDropAccept?.Invoke(draggableItem) ?? true; // Todo: Replace object with DraggableItem type.

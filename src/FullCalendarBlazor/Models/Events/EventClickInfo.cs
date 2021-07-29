@@ -1,7 +1,7 @@
 ﻿namespace FullCalendarBlazor.Models.Events
 {
     // Todo: Add types to properties with object types.
-    public class EventActionArgs
+    public class EventClickInfo
     {
         public Event Event { get; set; }
         public object El { get; set; }
