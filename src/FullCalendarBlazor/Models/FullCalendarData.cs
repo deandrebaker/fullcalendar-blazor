@@ -10,5 +10,11 @@ namespace FullCalendarBlazor.Models
         public TimeSpan? DefaultAllDayEventDuration { get; set; }
         public TimeSpan? DefaultTimedEventDuration { get; set; }
         public bool? ForceEventDuration { get; set; }
+        public bool? Editable { get; set; }
+        public bool? EventStartEditable { get; set; }
+        public bool? EventResizableFromStart { get; set; }
+        public bool? EventDurationEditable { get; set; }
+        public bool? EventResourceEditable { get; set; }
+        public bool? Droppable { get; set; }
     }
 }
