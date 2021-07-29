@@ -75,7 +75,7 @@ namespace FullCalendarBlazor
         [JSInvokable] public void EventLeave(ExternalEventDropInfo eventLeaveInfo) => OnEventLeave?.Invoke(eventLeaveInfo);
         [JSInvokable] public void EventResizeStart(EventDragInfo eventResizeInfo) => OnEventResizeStart?.Invoke(eventResizeInfo);
         [JSInvokable] public void EventResizeStop(EventDragInfo eventResizeInfo) => OnEventResizeStop?.Invoke(eventResizeInfo);
-        [JSInvokable] public void EventResizeStop(EventResizeInfo eventResizeInfo) => OnEventResize?.Invoke(eventResizeInfo);
+        [JSInvokable] public void EventResize(EventResizeInfo eventResizeInfo) => OnEventResize?.Invoke(eventResizeInfo);
 
         // Lifecycle methods
         protected override async Task OnAfterRenderAsync(bool firstRender)
