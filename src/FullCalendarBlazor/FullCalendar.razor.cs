@@ -25,6 +25,11 @@ namespace FullCalendarBlazor
         [Parameter] public bool? EventDurationEditable { get; set; }
         [Parameter] public bool? EventResourceEditable { get; set; }
         [Parameter] public bool? Droppable { get; set; }
+        [Parameter] public int? EventDragMinDistance { get; set; }
+        [Parameter] public int? DragRevertDuration { get; set; }
+        [Parameter] public bool? DragScroll { get; set; }
+        [Parameter] public TimeSpan? SnapDuration  { get; set; }
+        [Parameter] public bool? AllDayMaintainDuration { get; set; }
         [Parameter] public Action<EventActionArgs> OnEventClick { get; set; }
         [Parameter] public Action<EventActionArgs> OnEventMouseEnter { get; set; }
         [Parameter] public Action<EventActionArgs> OnEventMouseLeave { get; set; }
@@ -62,6 +67,11 @@ namespace FullCalendarBlazor
                 EventDurationEditable = EventDurationEditable,
                 EventResourceEditable = EventResourceEditable,
                 Droppable = Droppable,
+                EventDragMinDistance = EventDragMinDistance,
+                DragRevertDuration = DragRevertDuration,
+                DragScroll = DragScroll,
+                SnapDuration = SnapDuration,
+                AllDayMaintainDuration = AllDayMaintainDuration,
             };
             await JsInterop.Render(Id, data, DotNetObjectReference.Create(this));
         }

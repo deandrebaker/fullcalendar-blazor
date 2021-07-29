@@ -16,5 +16,11 @@ namespace FullCalendarBlazor.Models
         public bool? EventDurationEditable { get; set; }
         public bool? EventResourceEditable { get; set; }
         public bool? Droppable { get; set; }
+        public int? EventDragMinDistance { get; set; }
+        public int? DragRevertDuration { get; set; }
+        public bool? DragScroll { get; set; }
+        public TimeSpan? SnapDuration  { get; set; }
+        public bool? AllDayMaintainDuration { get; set; }
+        // Todo: Add FixedMirrorParent property
     }
 }
