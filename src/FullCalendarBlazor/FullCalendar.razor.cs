@@ -39,7 +39,7 @@ namespace FullCalendarBlazor
         [Parameter] public int? EventDragMinDistance { get; set; }
         [Parameter] public int? DragRevertDuration { get; set; }
         [Parameter] public bool? DragScroll { get; set; }
-        [Parameter] public TimeSpan? SnapDuration  { get; set; }
+        [Parameter] public TimeSpan? SnapDuration { get; set; }
         [Parameter] public bool? AllDayMaintainDuration { get; set; }
         // Todo: Add FixedMirrorParent parameter (https://fullcalendar.io/docs/fixedMirrorParent)
         [Parameter] public Func<Event, Event, bool> OnEventOverlap { get; set; }
@@ -63,7 +63,7 @@ namespace FullCalendarBlazor
         [JSInvokable] public void EventsSet(IEnumerable<Event> events) => OnEventsSet?.Invoke(events);
         [JSInvokable] public void EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
         [JSInvokable] public void EventMouseEnter(EventClickInfo mouseEnterInfo) => OnEventMouseEnter?.Invoke(mouseEnterInfo);
-        [JSInvokable] public void EventMouseLeave(EventClickInfo mouseLeaveInfo) =>  OnEventMouseLeave?.Invoke(mouseLeaveInfo);
+        [JSInvokable] public void EventMouseLeave(EventClickInfo mouseLeaveInfo) => OnEventMouseLeave?.Invoke(mouseLeaveInfo);
         [JSInvokable] public bool EventOverlap(Event stillEvent, Event movingEvent) => OnEventOverlap?.Invoke(stillEvent, movingEvent) ?? true;
         [JSInvokable] public bool EventAllow(EventAllowInfo eventAllowInfo, Event draggedEvent) => OnEventAllow?.Invoke(eventAllowInfo, draggedEvent) ?? true;
         [JSInvokable] public bool DropAccept(object draggableItem) => OnDropAccept?.Invoke(draggableItem) ?? true; // Todo: Replace object with DraggableItem type.
@@ -82,7 +82,7 @@ namespace FullCalendarBlazor
         {
             var data = new FullCalendarData
             {
-                Events = Events, 
+                Events = Events,
                 DefaultAllDay = DefaultAllDay,
                 DefaultAllDayEventDuration = DefaultAllDayEventDuration,
                 DefaultTimedEventDuration = DefaultTimedEventDuration,
@@ -98,7 +98,7 @@ namespace FullCalendarBlazor
                 DragScroll = DragScroll,
                 SnapDuration = SnapDuration,
                 AllDayMaintainDuration = AllDayMaintainDuration,
-                EventConstraint = EventConstraint,
+                EventConstraint = EventConstraint
             };
             await JsInterop.Render(Id, data, DotNetObjectReference.Create(this));
         }

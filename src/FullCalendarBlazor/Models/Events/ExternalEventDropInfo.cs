@@ -6,7 +6,9 @@ namespace FullCalendarBlazor.Models.Events
     public class ExternalEventDropInfo
     {
         public Event Event { get; set; }
+
         public IEnumerable<Event> RelatedEvents { get; set; }
+
         // Todo: Figure out how to use 'revert' property.
         public object DraggedEl { get; set; }
         public object View { get; set; }

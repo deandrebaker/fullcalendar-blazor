@@ -19,7 +19,7 @@ namespace FullCalendarBlazor.Models
         public int? EventDragMinDistance { get; set; }
         public int? DragRevertDuration { get; set; }
         public bool? DragScroll { get; set; }
-        public TimeSpan? SnapDuration  { get; set; }
+        public TimeSpan? SnapDuration { get; set; }
         public bool? AllDayMaintainDuration { get; set; }
         // Todo: Add FixedMirrorParent property
         public object EventConstraint { get; set; }
