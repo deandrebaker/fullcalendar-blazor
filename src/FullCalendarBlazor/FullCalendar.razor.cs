@@ -39,7 +39,7 @@ namespace FullCalendarBlazor
         // Todo: Add FixedMirrorParent parameter (https://fullcalendar.io/docs/fixedMirrorParent)
         [Parameter] public Func<Event, Event, bool> OnEventOverlap { get; set; }
         [Parameter] public object EventConstraint { get; set; }
-        [Parameter] public Func<EventDropInfo, Event, bool> OnEventAllow { get; set; }
+        [Parameter] public Func<DropInfo, Event, bool> OnEventAllow { get; set; }
         [Parameter] public Func<object, bool> OnDropAccept { get; set; }
 
         // JSInvokable methods
