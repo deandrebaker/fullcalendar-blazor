@@ -1,11 +1,33 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
+using FullCalendarBlazor.Models.DateAndTime;
+using FullCalendarBlazor.Models.Events;
+using FullCalendarBlazor.Models.Display;
 
 namespace FullCalendarBlazor.Models
 {
     public class FullCalendarData
     {
-        public IEnumerable Events { get; set; }
+        // Overall Display
+        public Toolbar HeaderToolbar { get; set; }
+        public Toolbar FooterToolbar { get; set; }
+        public DateTimeFormatter TitleFormat { get; set; }
+        public string TitleRangeSeparator { get; set; }
+        public Dictionary<string, string> ButtonText { get; set; }
+        public Dictionary<string, string> ButtonIcons { get; set; }
+        public object CustomButtons { get; set; }
+        public string ThemeSystem { get; set; }
+        public string Height { get; set; }
+        public string ContentHeight { get; set; }
+        public double? AspectRatio { get; set; }
+        public bool? ExpandRows { get; set; }
+        public bool? HandleWindowResize { get; set; }
+        public int? WindowResizeDelay { get; set; }
+        public string StickyHeaderDates { get; set; }
+        public string StickyFooterScrollbar { get; set; }
+
+        // Events
+        public IEnumerable<Event> Events { get; set; }
         public bool? DefaultAllDay { get; set; }
         public TimeSpan? DefaultAllDayEventDuration { get; set; }
         public TimeSpan? DefaultTimedEventDuration { get; set; }
