@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FullCalendarBlazor.Models;
 using FullCalendarBlazor.Models.DateAndTime;
@@ -46,6 +47,22 @@ namespace FullCalendarBlazor
         [Parameter] public Action<EventChangeInfo> OnEventChange { get; set; }
         [Parameter] public Action<EventAddInfo> OnEventRemove { get; set; }
         [Parameter] public Action<IEnumerable<Event>> OnEventsSet { get; set; }
+        [Parameter] public string EventColor { get; set; }
+        [Parameter] public string EventBackgroundColor { get; set; }
+        [Parameter] public string EventBorderColor { get; set; }
+        [Parameter] public string EventTextColor { get; set; }
+        [Parameter] public string EventDisplay { get; set; }
+        [Parameter] public DateTimeFormatter EventTimeFormat { get; set; }
+        [Parameter] public bool? DisplayEventTime { get; set; }
+        [Parameter] public bool? DisplayEventEnd { get; set; }
+        [Parameter] public TimeSpan? NextDayThreshold { get; set; }
+        public IEnumerable<string> EventOrder { get; set; }
+        [Parameter] public bool? EventOrderStrict { get; set; }
+        [Parameter] public bool? ProgressiveEventRendering { get; set; }
+        // [Parameter] public Func<EventRenderInfo, IEnumerable<string>> OnEventClassNames { get; set; } // Todo
+        // [Parameter] public Func<EventRenderInfo, object> OnEventContent { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<EventRenderInfo> OnEventDidMount { get; set; }
+        [Parameter] public Action<EventRenderInfo> OnEventWillUnmount { get; set; }
         [Parameter] public bool? Editable { get; set; }
         [Parameter] public bool? EventStartEditable { get; set; }
         [Parameter] public bool? EventResizableFromStart { get; set; }
@@ -74,6 +91,15 @@ namespace FullCalendarBlazor
         [Parameter] public Action<EventDragInfo> OnEventResizeStart { get; set; }
         [Parameter] public Action<EventDragInfo> OnEventResizeStop { get; set; }
         [Parameter] public Action<EventResizeInfo> OnEventResize { get; set; }
+        [Parameter] public int? DayMaxEventRows { get; set; }
+        [Parameter] public int? DayMaxEvents { get; set; }
+        [Parameter] public int? EventMaxStack { get; set; }
+        [Parameter] public string MoreLinkClick { get; set; }
+        [Parameter] public DateTimeFormatter DayPopoverFormat { get; set; }
+        // [Parameter] public Func<int, string, IEnumerable<string>> OnMoreLinkClassNames { get; set; } // Todo
+        // [Parameter] public Func<int, string, object> OnMoreLinkContent { get; set; } // Todo: Replace object with proper type // Todo
+        [Parameter] public Action<int, string> OnMoreLinkDidMount { get; set; }
+        [Parameter] public Action<int, string> OnMoreLinkWillUnmount { get; set; }
 
         // JSInvokable methods
         [JSInvokable] public void WindowResize(object view) => OnWindowResize?.Invoke(view); // Todo: Replace object with View type
@@ -81,6 +107,10 @@ namespace FullCalendarBlazor
         [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
         [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
         [JSInvokable] public void EventsSet(IEnumerable<Event> events) => OnEventsSet?.Invoke(events);
+        // [JSInvokable] public IEnumerable<string> EventClassNames(EventRenderInfo eventRenderInfo) => OnEventClassNames?.Invoke(eventRenderInfo) ?? Enumerable.Empty<string>(); // Todo
+        // [JSInvokable] public object EventContent(EventRenderInfo eventRenderInfo) => OnEventContent?.Invoke(eventRenderInfo); // Todo
+        [JSInvokable] public void EventDidMount(EventRenderInfo eventRenderInfo) => OnEventDidMount?.Invoke(eventRenderInfo);
+        [JSInvokable] public void EventWillUnmount(EventRenderInfo eventRenderInfo) => OnEventWillUnmount?.Invoke(eventRenderInfo);
         [JSInvokable] public void EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
         [JSInvokable] public void EventMouseEnter(EventClickInfo mouseEnterInfo) => OnEventMouseEnter?.Invoke(mouseEnterInfo);
         [JSInvokable] public void EventMouseLeave(EventClickInfo mouseLeaveInfo) => OnEventMouseLeave?.Invoke(mouseLeaveInfo);
@@ -96,6 +126,10 @@ namespace FullCalendarBlazor
         [JSInvokable] public void EventResizeStart(EventDragInfo eventResizeInfo) => OnEventResizeStart?.Invoke(eventResizeInfo);
         [JSInvokable] public void EventResizeStop(EventDragInfo eventResizeInfo) => OnEventResizeStop?.Invoke(eventResizeInfo);
         [JSInvokable] public void EventResize(EventResizeInfo eventResizeInfo) => OnEventResize?.Invoke(eventResizeInfo);
+        // [JSInvokable] public IEnumerable<string> MoreLinkClassNames(int num, string text) => OnMoreLinkClassNames?.Invoke(num, text) ?? Enumerable.Empty<string>(); // Todo
+        // [JSInvokable] public object MoreLinkContent(int num, string text) => OnMoreLinkContent?.Invoke(num, text); // Todo
+        [JSInvokable] public void MoreLinkDidMount(int num, string text) => OnMoreLinkDidMount?.Invoke(num, text);
+        [JSInvokable] public void MoreLinkWillUnmount(int num, string text) => OnMoreLinkWillUnmount?.Invoke(num, text);
 
         // Lifecycle methods
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -123,6 +157,18 @@ namespace FullCalendarBlazor
                 DefaultAllDayEventDuration = DefaultAllDayEventDuration,
                 DefaultTimedEventDuration = DefaultTimedEventDuration,
                 ForceEventDuration = ForceEventDuration,
+                EventColor = EventColor,
+                EventBackgroundColor = EventBackgroundColor,
+                EventBorderColor = EventBorderColor,
+                EventTextColor = EventTextColor,
+                EventDisplay = EventDisplay,
+                EventTimeFormat = EventTimeFormat,
+                DisplayEventTime = DisplayEventTime,
+                DisplayEventEnd = DisplayEventEnd,
+                NextDayThreshold = NextDayThreshold,
+                EventOrder = EventOrder,
+                EventOrderStrict = EventOrderStrict,
+                ProgressiveEventRendering = ProgressiveEventRendering,
                 Editable = Editable,
                 EventStartEditable = EventStartEditable,
                 EventResizableFromStart = EventResizableFromStart,
@@ -134,7 +180,12 @@ namespace FullCalendarBlazor
                 DragScroll = DragScroll,
                 SnapDuration = SnapDuration,
                 AllDayMaintainDuration = AllDayMaintainDuration,
-                EventConstraint = EventConstraint
+                EventConstraint = EventConstraint,
+                DayMaxEventRows = DayMaxEventRows,
+                DayMaxEvents = DayMaxEvents,
+                EventMaxStack = EventMaxStack,
+                MoreLinkClick = MoreLinkClick,
+                DayPopoverFormat = DayPopoverFormat,
             };
             await JsInterop.Render(Id, data, DotNetObjectReference.Create(this));
         }
