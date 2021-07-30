@@ -16,6 +16,7 @@ namespace FullCalendarBlazor.Models
         public Dictionary<string, string> ButtonText { get; set; }
         public Dictionary<string, string> ButtonIcons { get; set; }
         public object CustomButtons { get; set; }
+        public string ThemeSystem { get; set; }
         
         // Events
         public IEnumerable<Event> Events { get; set; }

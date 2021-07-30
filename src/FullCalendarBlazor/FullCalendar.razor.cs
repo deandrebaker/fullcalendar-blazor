@@ -26,6 +26,7 @@ namespace FullCalendarBlazor
         [Parameter] public Dictionary<string, string> ButtonText { get; set; }
         [Parameter] public Dictionary<string, string> ButtonIcons { get; set; }
         [Parameter] public object CustomButtons { get; set; }
+        [Parameter] public string ThemeSystem { get; set; }
         [Parameter] public IEnumerable<Event> Events { get; set; }
         // Todo: Add EventDataTransform delegate for transforming events from a source (https://fullcalendar.io/docs/eventDataTransform)
         [Parameter] public bool? DefaultAllDay { get; set; }
@@ -98,6 +99,7 @@ namespace FullCalendarBlazor
                 ButtonText = ButtonText,
                 ButtonIcons = ButtonIcons,
                 CustomButtons = CustomButtons,
+                ThemeSystem = ThemeSystem,
                 Events = Events,
                 DefaultAllDay = DefaultAllDay,
                 DefaultAllDayEventDuration = DefaultAllDayEventDuration,
