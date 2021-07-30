@@ -41,6 +41,7 @@ namespace FullCalendarBlazor.Models
         public bool? DisplayEventTime { get; set; }
         public bool? DisplayEventEnd { get; set; }
         public TimeSpan? NextDayThreshold { get; set; }
+        public IEnumerable<string> EventOrder { get; set; }
         public bool? EventOrderStrict { get; set; }
         public bool? ProgressiveEventRendering { get; set; }
         public bool? Editable { get; set; }
