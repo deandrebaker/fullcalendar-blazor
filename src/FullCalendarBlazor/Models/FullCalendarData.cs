@@ -56,5 +56,10 @@ namespace FullCalendarBlazor.Models
         public bool? AllDayMaintainDuration { get; set; }
         // Todo: Add FixedMirrorParent property
         public object EventConstraint { get; set; }
+        public int? DayMaxEventRows { get; set; }
+        public int? DayMaxEvents { get; set; }
+        public int? EventMaxStack { get; set; }
+        public string MoreLinkClick { get; set; } // Todo: Could be a function
+        public DateTimeFormatter DayPopoverFormat { get; set; }
     }
 }

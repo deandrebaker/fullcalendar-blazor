@@ -29,6 +29,10 @@ export function render(elementId, serializedData, objRef) {
     calendarData.eventResizeStart = (eventResizeInfo) => objRef.invokeMethod('EventResizeStart', eventResizeInfo);
     calendarData.eventResizeStop = (eventResizeInfo) => objRef.invokeMethod('EventResizeStop', eventResizeInfo);
     calendarData.eventResize = (eventResizeInfo) => objRef.invokeMethod('EventResize', eventResizeInfo);
+    calendarData.moreLinkClassNames = (num, text) => objRef.invokeMethod('MoreLinkClassNames', num, text);
+    calendarData.moreLinkContent = (num, text) => objRef.invokeMethod('MoreLinkContent', num, text);
+    calendarData.moreLinkDidMount = (num, text) => objRef.invokeMethod('MoreLinkDidMount', num, text);
+    calendarData.moreLinkWillUnmount = (num, text) => objRef.invokeMethod('MoreLinkWillUnmount', num, text);
 
     var calendarElement = document.getElementById(elementId);
     var calendar = new FullCalendar.Calendar(calendarElement, calendarData);

@@ -91,6 +91,15 @@ namespace FullCalendarBlazor
         [Parameter] public Action<EventDragInfo> OnEventResizeStart { get; set; }
         [Parameter] public Action<EventDragInfo> OnEventResizeStop { get; set; }
         [Parameter] public Action<EventResizeInfo> OnEventResize { get; set; }
+        [Parameter] public int? DayMaxEventRows { get; set; }
+        [Parameter] public int? DayMaxEvents { get; set; }
+        [Parameter] public int? EventMaxStack { get; set; }
+        [Parameter] public string MoreLinkClick { get; set; }
+        [Parameter] public DateTimeFormatter DayPopoverFormat { get; set; }
+        [Parameter] public Func<int, string, IEnumerable<string>> OnMoreLinkClassNames { get; set; }
+        [Parameter] public Func<int, string, object> OnMoreLinkContent { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<int, string> OnMoreLinkDidMount { get; set; }
+        [Parameter] public Action<int, string> OnMoreLinkWillUnmount { get; set; }
 
         // JSInvokable methods
         [JSInvokable] public void WindowResize(object view) => OnWindowResize?.Invoke(view); // Todo: Replace object with View type
@@ -118,6 +127,10 @@ namespace FullCalendarBlazor
         [JSInvokable] public void EventResizeStart(EventDragInfo eventResizeInfo) => OnEventResizeStart?.Invoke(eventResizeInfo);
         [JSInvokable] public void EventResizeStop(EventDragInfo eventResizeInfo) => OnEventResizeStop?.Invoke(eventResizeInfo);
         [JSInvokable] public void EventResize(EventResizeInfo eventResizeInfo) => OnEventResize?.Invoke(eventResizeInfo);
+        [JSInvokable] public IEnumerable<string> MoreLinkClassNames(int num, string text) => OnMoreLinkClassNames?.Invoke(num, text) ?? Enumerable.Empty<string>();
+        [JSInvokable] public object MoreLinkContent(int num, string text) => OnMoreLinkContent?.Invoke(num, text);
+        [JSInvokable] public void MoreLinkDidMount(int num, string text) => OnMoreLinkDidMount?.Invoke(num, text);
+        [JSInvokable] public void MoreLinkWillUnmount(int num, string text) => OnMoreLinkWillUnmount?.Invoke(num, text);
 
         // Lifecycle methods
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -167,7 +180,12 @@ namespace FullCalendarBlazor
                 DragScroll = DragScroll,
                 SnapDuration = SnapDuration,
                 AllDayMaintainDuration = AllDayMaintainDuration,
-                EventConstraint = EventConstraint
+                EventConstraint = EventConstraint,
+                DayMaxEventRows = DayMaxEventRows,
+                DayMaxEvents = DayMaxEvents,
+                EventMaxStack = EventMaxStack,
+                MoreLinkClick = MoreLinkClick,
+                DayPopoverFormat = DayPopoverFormat,
             };
             await JsInterop.Render(Id, data, DotNetObjectReference.Create(this));
         }
