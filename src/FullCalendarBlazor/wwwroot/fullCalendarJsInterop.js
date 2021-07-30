@@ -9,6 +9,11 @@ export function render(elementId, serializedData, objRef) {
     calendarData.eventChange = (eventChangeInfo) => objRef.invokeMethod('EventChange', eventChangeInfo);
     calendarData.eventRemove = (eventRemoveInfo) => objRef.invokeMethod('EventRemove', eventRemoveInfo);
     calendarData.eventsSet = (events) => objRef.invokeMethod('EventsSet', events);
+    calendarData.eventOrder = (eventA, eventB) => objRef.invokeMethod('EventOrder', eventA, eventB);
+    calendarData.eventClassNames = (eventRenderInfo) => objRef.invokeMethod('EventClassNames', eventRenderInfo);
+    calendarData.eventContent = (eventRenderInfo) => objRef.invokeMethod('EventContent', eventRenderInfo);
+    calendarData.eventDidMount = (eventRenderInfo) => objRef.invokeMethod('EventDidMount', eventRenderInfo);
+    calendarData.eventWillUnmount = (eventRenderInfo) => objRef.invokeMethod('EventWillUnmount', eventRenderInfo);
     calendarData.eventClick = (eventClickInfo) => objRef.invokeMethod('EventClick', eventClickInfo);
     calendarData.eventMouseEnter = (mouseEnterInfo) => objRef.invokeMethod('EventMouseEnter', mouseEnterInfo);
     calendarData.eventMouseLeave = (mouseLeaveInfo) => objRef.invokeMethod('EventMouseLeave', mouseLeaveInfo);

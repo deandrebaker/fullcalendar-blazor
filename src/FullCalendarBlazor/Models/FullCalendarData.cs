@@ -32,6 +32,17 @@ namespace FullCalendarBlazor.Models
         public TimeSpan? DefaultAllDayEventDuration { get; set; }
         public TimeSpan? DefaultTimedEventDuration { get; set; }
         public bool? ForceEventDuration { get; set; }
+        public string EventColor { get; set; }
+        public string EventBackgroundColor { get; set; }
+        public string EventBorderColor { get; set; }
+        public string EventTextColor { get; set; }
+        public string EventDisplay { get; set; }
+        public DateTimeFormatter EventTimeFormat { get; set; }
+        public bool? DisplayEventTime { get; set; }
+        public bool? DisplayEventEnd { get; set; }
+        public TimeSpan? NextDayThreshold { get; set; }
+        public bool? EventOrderStrict { get; set; }
+        public bool? ProgressiveEventRendering { get; set; }
         public bool? Editable { get; set; }
         public bool? EventStartEditable { get; set; }
         public bool? EventResizableFromStart { get; set; }

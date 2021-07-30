@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FullCalendarBlazor.Models;
 using FullCalendarBlazor.Models.DateAndTime;
@@ -46,6 +47,22 @@ namespace FullCalendarBlazor
         [Parameter] public Action<EventChangeInfo> OnEventChange { get; set; }
         [Parameter] public Action<EventAddInfo> OnEventRemove { get; set; }
         [Parameter] public Action<IEnumerable<Event>> OnEventsSet { get; set; }
+        [Parameter] public string EventColor { get; set; }
+        [Parameter] public string EventBackgroundColor { get; set; }
+        [Parameter] public string EventBorderColor { get; set; }
+        [Parameter] public string EventTextColor { get; set; }
+        [Parameter] public string EventDisplay { get; set; }
+        [Parameter] public DateTimeFormatter EventTimeFormat { get; set; }
+        [Parameter] public bool? DisplayEventTime { get; set; }
+        [Parameter] public bool? DisplayEventEnd { get; set; }
+        [Parameter] public TimeSpan? NextDayThreshold { get; set; }
+        [Parameter] public Func<Event, Event, int> OnEventOrder { get; set; }
+        [Parameter] public bool? EventOrderStrict { get; set; }
+        [Parameter] public bool? ProgressiveEventRendering { get; set; }
+        [Parameter] public Func<EventRenderInfo, IEnumerable<string>> OnEventClassNames { get; set; }
+        [Parameter] public Func<EventRenderInfo, object> OnEventContent { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<EventRenderInfo> OnEventDidMount { get; set; }
+        [Parameter] public Action<EventRenderInfo> OnEventWillUnmount { get; set; }
         [Parameter] public bool? Editable { get; set; }
         [Parameter] public bool? EventStartEditable { get; set; }
         [Parameter] public bool? EventResizableFromStart { get; set; }
@@ -81,6 +98,11 @@ namespace FullCalendarBlazor
         [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
         [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
         [JSInvokable] public void EventsSet(IEnumerable<Event> events) => OnEventsSet?.Invoke(events);
+        [JSInvokable] public int EventOrder(Event eventA, Event eventB) => OnEventOrder?.Invoke(eventA, eventB) ?? 0; // Todo: Make a default sort function.
+        [JSInvokable] public IEnumerable<string> EventClassNames(EventRenderInfo eventRenderInfo) => OnEventClassNames?.Invoke(eventRenderInfo) ?? Enumerable.Empty<string>();
+        [JSInvokable] public object EventContent(EventRenderInfo eventRenderInfo) => OnEventContent?.Invoke(eventRenderInfo);
+        [JSInvokable] public void EventDidMount(EventRenderInfo eventRenderInfo) => OnEventDidMount?.Invoke(eventRenderInfo);
+        [JSInvokable] public void EventWillUnmount(EventRenderInfo eventRenderInfo) => OnEventWillUnmount?.Invoke(eventRenderInfo);
         [JSInvokable] public void EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
         [JSInvokable] public void EventMouseEnter(EventClickInfo mouseEnterInfo) => OnEventMouseEnter?.Invoke(mouseEnterInfo);
         [JSInvokable] public void EventMouseLeave(EventClickInfo mouseLeaveInfo) => OnEventMouseLeave?.Invoke(mouseLeaveInfo);
@@ -123,6 +145,17 @@ namespace FullCalendarBlazor
                 DefaultAllDayEventDuration = DefaultAllDayEventDuration,
                 DefaultTimedEventDuration = DefaultTimedEventDuration,
                 ForceEventDuration = ForceEventDuration,
+                EventColor = EventColor,
+                EventBackgroundColor = EventBackgroundColor,
+                EventBorderColor = EventBorderColor,
+                EventTextColor = EventTextColor,
+                EventDisplay = EventDisplay,
+                EventTimeFormat = EventTimeFormat,
+                DisplayEventTime = DisplayEventTime,
+                DisplayEventEnd = DisplayEventEnd,
+                NextDayThreshold = NextDayThreshold,
+                EventOrderStrict = EventOrderStrict,
+                ProgressiveEventRendering = ProgressiveEventRendering,
                 Editable = Editable,
                 EventStartEditable = EventStartEditable,
                 EventResizableFromStart = EventResizableFromStart,
