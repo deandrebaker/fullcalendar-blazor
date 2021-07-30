@@ -13,11 +13,12 @@ namespace FullCalendarBlazor.Services
 
         public JSRuntimeService(IJSRuntime jsRuntime)
         {
-            _moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-               "import", "./_content/FullCalendarBlazor/fullCalendarJsInterop.js").AsTask());
+            _moduleTask = new Lazy<Task<IJSObjectReference>>(() => jsRuntime.InvokeAsync<IJSObjectReference>(
+                "import", "./_content/FullCalendarBlazor/fullCalendarJsInterop.js").AsTask());
         }
 
-        public async ValueTask Render(string elementId, FullCalendarData data)
+        public async ValueTask Render(string elementId, FullCalendarData data,
+            DotNetObjectReference<FullCalendar> objRef)
         {
             var serializedData = JsonConvert.SerializeObject(data, Formatting.Indented, new JsonSerializerSettings
             {
@@ -28,7 +29,7 @@ namespace FullCalendarBlazor.Services
                 NullValueHandling = NullValueHandling.Ignore
             });
             var module = await _moduleTask.Value;
-            await module.InvokeVoidAsync("render", elementId, serializedData);
+            await module.InvokeVoidAsync("render", elementId, serializedData, objRef);
         }
 
         public async ValueTask DisposeAsync()
