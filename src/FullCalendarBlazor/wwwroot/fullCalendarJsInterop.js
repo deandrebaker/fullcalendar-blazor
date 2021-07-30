@@ -4,6 +4,7 @@ export function render(elementId, serializedData, objRef) {
     var calendarData = JSON.parse(serializedData);
 
     // Calendar functions
+    calendarData.windowResize = (arg) => objRef.invokeMethod('WindowResize', arg.view);
     calendarData.eventAdd = (eventAddInfo) => objRef.invokeMethod('EventAdd', eventAddInfo);
     calendarData.eventChange = (eventChangeInfo) => objRef.invokeMethod('EventChange', eventChangeInfo);
     calendarData.eventRemove = (eventRemoveInfo) => objRef.invokeMethod('EventRemove', eventRemoveInfo);

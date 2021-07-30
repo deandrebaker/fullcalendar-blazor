@@ -27,6 +27,15 @@ namespace FullCalendarBlazor
         [Parameter] public Dictionary<string, string> ButtonIcons { get; set; }
         [Parameter] public object CustomButtons { get; set; }
         [Parameter] public string ThemeSystem { get; set; }
+        [Parameter] public string Height { get; set; }
+        [Parameter] public string ContentHeight { get; set; }
+        [Parameter] public double? AspectRatio { get; set; }
+        [Parameter] public bool? ExpandRows { get; set; }
+        [Parameter] public bool? HandleWindowResize { get; set; }
+        [Parameter] public int? WindowResizeDelay { get; set; }
+        [Parameter] public string StickyHeaderDates { get; set; }
+        [Parameter] public string StickyFooterScrollbar { get; set; }
+        [Parameter] public Action<object> OnWindowResize { get; set; }
         [Parameter] public IEnumerable<Event> Events { get; set; }
         // Todo: Add EventDataTransform delegate for transforming events from a source (https://fullcalendar.io/docs/eventDataTransform)
         [Parameter] public bool? DefaultAllDay { get; set; }
@@ -67,6 +76,7 @@ namespace FullCalendarBlazor
         [Parameter] public Action<EventResizeInfo> OnEventResize { get; set; }
 
         // JSInvokable methods
+        [JSInvokable] public void WindowResize(object view) => OnWindowResize?.Invoke(view); // Todo: Replace object with View type
         [JSInvokable] public void EventAdd(EventAddInfo eventAddInfo) => OnEventAdd?.Invoke(eventAddInfo);
         [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
         [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
@@ -100,6 +110,14 @@ namespace FullCalendarBlazor
                 ButtonIcons = ButtonIcons,
                 CustomButtons = CustomButtons,
                 ThemeSystem = ThemeSystem,
+                Height = Height,
+                ContentHeight = ContentHeight,
+                AspectRatio = AspectRatio,
+                ExpandRows = ExpandRows,
+                HandleWindowResize = HandleWindowResize,
+                WindowResizeDelay = WindowResizeDelay,
+                StickyHeaderDates = StickyHeaderDates,
+                StickyFooterScrollbar = StickyFooterScrollbar,
                 Events = Events,
                 DefaultAllDay = DefaultAllDay,
                 DefaultAllDayEventDuration = DefaultAllDayEventDuration,

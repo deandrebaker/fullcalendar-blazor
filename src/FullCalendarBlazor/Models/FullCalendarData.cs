@@ -17,7 +17,15 @@ namespace FullCalendarBlazor.Models
         public Dictionary<string, string> ButtonIcons { get; set; }
         public object CustomButtons { get; set; }
         public string ThemeSystem { get; set; }
-        
+        public string Height { get; set; }
+        public string ContentHeight { get; set; }
+        public double? AspectRatio { get; set; }
+        public bool? ExpandRows { get; set; }
+        public bool? HandleWindowResize { get; set; }
+        public int? WindowResizeDelay { get; set; }
+        public string StickyHeaderDates { get; set; }
+        public string StickyFooterScrollbar { get; set; }
+
         // Events
         public IEnumerable<Event> Events { get; set; }
         public bool? DefaultAllDay { get; set; }
