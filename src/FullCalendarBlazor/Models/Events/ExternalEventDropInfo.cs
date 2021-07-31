@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FullCalendarBlazor.Models.Views;
 
 namespace FullCalendarBlazor.Models.Events
 {
@@ -11,6 +12,6 @@ namespace FullCalendarBlazor.Models.Events
 
         // Todo: Figure out how to use 'revert' property.
         public object DraggedEl { get; set; }
-        public object View { get; set; }
+        public View View { get; set; }
     }
 }

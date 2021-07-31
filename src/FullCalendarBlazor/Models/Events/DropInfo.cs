@@ -1,4 +1,5 @@
 ﻿using System;
+using FullCalendarBlazor.Models.Views;
 
 namespace FullCalendarBlazor.Models.Events
 {
@@ -11,6 +12,6 @@ namespace FullCalendarBlazor.Models.Events
         public object DraggedEl { get; set; }
         public object JsEvent { get; set; }
         public object Resource { get; set; }
-        public object View { get; set; }
+        public View View { get; set; }
     }
 }
