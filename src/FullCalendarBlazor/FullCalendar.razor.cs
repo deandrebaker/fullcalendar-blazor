@@ -20,7 +20,11 @@ namespace FullCalendarBlazor
         [Inject] private IJSRuntimeService JsInterop { get; set; }
 
         // Parameters
+
         [Parameter] public string Id { get; set; }
+
+        #region Overall Display
+
         [Parameter] public Toolbar HeaderToolbar { get; set; }
         [Parameter] public Toolbar FooterToolbar { get; set; }
         [Parameter] public DateTimeFormatter TitleFormat { get; set; }
@@ -38,6 +42,11 @@ namespace FullCalendarBlazor
         [Parameter] public string StickyHeaderDates { get; set; }
         [Parameter] public string StickyFooterScrollbar { get; set; }
         [Parameter] public Action<View> OnWindowResize { get; set; }
+
+        #endregion
+
+        #region Views
+
         [Parameter] public bool? FixedWeekCount { get; set; }
         [Parameter] public bool? ShowNonCurrentDates { get; set; }
         [Parameter] public int? EventMinHeight { get; set; }
@@ -58,6 +67,17 @@ namespace FullCalendarBlazor
         // [Parameter] public Func<object, IEnumerable<string>> OnViewClassNames { get; set; } // Todo
         [Parameter] public Action<View, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
         [Parameter] public Action<View, object> OnViewWillUnmount { get; set; } // Todo: Replace object with proper type
+
+        #endregion
+
+        #region Date and Time
+
+        
+
+        #endregion
+
+        #region Events
+
         [Parameter] public IEnumerable<Event> Events { get; set; }
         // Todo: Add EventDataTransform delegate for transforming events from a source (https://fullcalendar.io/docs/eventDataTransform)
         [Parameter] public bool? DefaultAllDay { get; set; }
@@ -122,8 +142,18 @@ namespace FullCalendarBlazor
         [Parameter] public Action<int, string> OnMoreLinkDidMount { get; set; }
         [Parameter] public Action<int, string> OnMoreLinkWillUnmount { get; set; }
 
+        #endregion
+
         // JSInvokable methods
+
+        #region Overall Display
+
         [JSInvokable] public void WindowResize(View view) => OnWindowResize?.Invoke(view); // Todo: Replace object with View type
+
+        #endregion
+
+        #region Views
+
         // [JSInvokable] public IEnumerable<string> AllDayClassNames(object arg) => OnAllDayClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
         // [JSInvokable] public object AllDayContent(object arg) => OnAllDayContent?.Invoke(arg); // Todo
         [JSInvokable] public void AllDayDidMount(string text) => OnAllDayDidMount?.Invoke(text);
@@ -135,6 +165,17 @@ namespace FullCalendarBlazor
         // [JSInvokable] public IEnumerable<string> ViewClassNames(object arg) => OnViewClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
         [JSInvokable] public void ViewDidMount(View view, object el) => OnViewDidMount?.Invoke(view, el);
         [JSInvokable] public void ViewWillUnmount(View view, object el) => OnViewWillUnmount?.Invoke(view, el);
+
+        #endregion Views
+
+        #region Date and Time
+
+        
+
+        #endregion
+
+        #region Event
+
         [JSInvokable] public void EventAdd(EventAddInfo eventAddInfo) => OnEventAdd?.Invoke(eventAddInfo);
         [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
         [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
@@ -163,11 +204,15 @@ namespace FullCalendarBlazor
         [JSInvokable] public void MoreLinkDidMount(int num, string text) => OnMoreLinkDidMount?.Invoke(num, text);
         [JSInvokable] public void MoreLinkWillUnmount(int num, string text) => OnMoreLinkWillUnmount?.Invoke(num, text);
 
+        #endregion
+
         // Lifecycle methods
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             var data = new FullCalendarData
             {
+                #region Overall Display
+
                 HeaderToolbar = HeaderToolbar,
                 FooterToolbar = FooterToolbar,
                 TitleFormat = TitleFormat,
@@ -184,6 +229,11 @@ namespace FullCalendarBlazor
                 WindowResizeDelay = WindowResizeDelay,
                 StickyHeaderDates = StickyHeaderDates,
                 StickyFooterScrollbar = StickyFooterScrollbar,
+
+                #endregion
+
+                #region Views
+
                 FixedWeekCount = FixedWeekCount,
                 ShowNonCurrentDates = ShowNonCurrentDates,
                 EventMinHeight = EventMinHeight,
@@ -193,6 +243,17 @@ namespace FullCalendarBlazor
                 ListDayFormat = ListDayFormat,
                 ListDaySideFormat = ListDaySideFormat,
                 InitialView = InitialView,
+
+                #endregion
+
+                #region Date and Time
+
+                
+
+                #endregion
+
+                #region Event
+
                 Events = Events,
                 DefaultAllDay = DefaultAllDay,
                 DefaultAllDayEventDuration = DefaultAllDayEventDuration,
@@ -227,6 +288,8 @@ namespace FullCalendarBlazor
                 EventMaxStack = EventMaxStack,
                 MoreLinkClick = MoreLinkClick,
                 DayPopoverFormat = DayPopoverFormat,
+
+                #endregion
             };
             await JsInterop.Render(Id, data, DotNetObjectReference.Create(this));
         }

@@ -8,7 +8,8 @@ namespace FullCalendarBlazor.Models
 {
     public class FullCalendarData
     {
-        // Overall Display
+        #region Overall Display
+
         public Toolbar HeaderToolbar { get; set; }
         public Toolbar FooterToolbar { get; set; }
         public DateTimeFormatter TitleFormat { get; set; }
@@ -25,6 +26,11 @@ namespace FullCalendarBlazor.Models
         public int? WindowResizeDelay { get; set; }
         public string StickyHeaderDates { get; set; }
         public string StickyFooterScrollbar { get; set; }
+
+        #endregion
+
+        #region Views
+
         public bool? FixedWeekCount { get; set; }
         public bool? ShowNonCurrentDates { get; set; }
         public int? EventMinHeight { get; set; }
@@ -35,7 +41,16 @@ namespace FullCalendarBlazor.Models
         public DateTimeFormatter ListDaySideFormat { get; set; }
         public string InitialView { get; set; }
 
-        // Events
+        #endregion
+
+        #region Date and Time
+
+        
+
+        #endregion
+
+        #region Events
+
         public IEnumerable<Event> Events { get; set; }
         public bool? DefaultAllDay { get; set; }
         public TimeSpan? DefaultAllDayEventDuration { get; set; }
@@ -71,5 +86,7 @@ namespace FullCalendarBlazor.Models
         public int? EventMaxStack { get; set; }
         public string MoreLinkClick { get; set; } // Todo: Could be a function
         public DateTimeFormatter DayPopoverFormat { get; set; }
+
+        #endregion
     }
 }
