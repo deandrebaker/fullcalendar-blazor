@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FullCalendarBlazor.Models.Views;
 
 namespace FullCalendarBlazor.Models.Events
 {
@@ -11,7 +12,7 @@ namespace FullCalendarBlazor.Models.Events
         public TimeSpan EndDelta { get; set; }
         public TimeSpan StartDelta { get; set; }
         // Todo: Figure out how to use 'revert' property.
-        public object View { get; set; }
+        public View View { get; set; }
         public object El { get; set; }
         public object JsEvent { get; set; }
     }

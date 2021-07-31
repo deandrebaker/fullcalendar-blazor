@@ -1,4 +1,6 @@
-﻿namespace FullCalendarBlazor.Models.Events
+﻿using FullCalendarBlazor.Models.Views;
+
+namespace FullCalendarBlazor.Models.Events
 {
     public class EventRenderInfo
     {
@@ -11,6 +13,6 @@
         public bool? IsFuture { get; set; }
         public bool? IsToday { get; set; }
         public object El { get; set; } // Todo: Replace with object with proper type
-        public object View { get; set; } // Todo: Replace object with View type
+        public View View { get; set; }
     }
 }

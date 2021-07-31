@@ -7,6 +7,7 @@ using FullCalendarBlazor.Models;
 using FullCalendarBlazor.Models.DateAndTime;
 using FullCalendarBlazor.Models.Display;
 using FullCalendarBlazor.Models.Events;
+using FullCalendarBlazor.Models.Views;
 using FullCalendarBlazor.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -36,7 +37,7 @@ namespace FullCalendarBlazor
         [Parameter] public int? WindowResizeDelay { get; set; }
         [Parameter] public string StickyHeaderDates { get; set; }
         [Parameter] public string StickyFooterScrollbar { get; set; }
-        [Parameter] public Action<object> OnWindowResize { get; set; }
+        [Parameter] public Action<View> OnWindowResize { get; set; }
         [Parameter] public bool? FixedWeekCount { get; set; }
         [Parameter] public bool? ShowNonCurrentDates { get; set; }
         [Parameter] public int? EventMinHeight { get; set; }
@@ -55,8 +56,8 @@ namespace FullCalendarBlazor
         [Parameter] public Action<object> OnNoEventsWillUnmount { get; set; } // Todo: Replace object with proper type
         [Parameter] public string InitialView { get; set; }
         // [Parameter] public Func<object, IEnumerable<string>> OnViewClassNames { get; set; } // Todo
-        [Parameter] public Action<object, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
-        [Parameter] public Action<object, object> OnViewWillUnmount { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<View, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<View, object> OnViewWillUnmount { get; set; } // Todo: Replace object with proper type
         [Parameter] public IEnumerable<Event> Events { get; set; }
         // Todo: Add EventDataTransform delegate for transforming events from a source (https://fullcalendar.io/docs/eventDataTransform)
         [Parameter] public bool? DefaultAllDay { get; set; }
@@ -122,7 +123,7 @@ namespace FullCalendarBlazor
         [Parameter] public Action<int, string> OnMoreLinkWillUnmount { get; set; }
 
         // JSInvokable methods
-        [JSInvokable] public void WindowResize(object view) => OnWindowResize?.Invoke(view); // Todo: Replace object with View type
+        [JSInvokable] public void WindowResize(View view) => OnWindowResize?.Invoke(view); // Todo: Replace object with View type
         // [JSInvokable] public IEnumerable<string> AllDayClassNames(object arg) => OnAllDayClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
         // [JSInvokable] public object AllDayContent(object arg) => OnAllDayContent?.Invoke(arg); // Todo
         [JSInvokable] public void AllDayDidMount(string text) => OnAllDayDidMount?.Invoke(text);
@@ -132,8 +133,8 @@ namespace FullCalendarBlazor
         [JSInvokable] public void NoEventsDidMount(object el) => OnNoEventsDidMount?.Invoke(el);
         [JSInvokable] public void NoEventsWillUnmount(object el) => OnNoEventsWillUnmount?.Invoke(el);
         // [JSInvokable] public IEnumerable<string> ViewClassNames(object arg) => OnViewClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
-        [JSInvokable] public void ViewDidMount(object view, object el) => OnViewDidMount?.Invoke(view, el);
-        [JSInvokable] public void ViewWillUnmount(object view, object el) => OnViewWillUnmount?.Invoke(view, el);
+        [JSInvokable] public void ViewDidMount(View view, object el) => OnViewDidMount?.Invoke(view, el);
+        [JSInvokable] public void ViewWillUnmount(View view, object el) => OnViewWillUnmount?.Invoke(view, el);
         [JSInvokable] public void EventAdd(EventAddInfo eventAddInfo) => OnEventAdd?.Invoke(eventAddInfo);
         [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
         [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
