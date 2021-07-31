@@ -4,7 +4,15 @@ export function render(elementId, serializedData, objRef) {
     var calendarData = JSON.parse(serializedData);
 
     // Calendar functions
+
+    // region Overall Display
+
     calendarData.windowResize = (arg) => objRef.invokeMethod('WindowResize', arg.view);
+
+    // endregion
+
+    // region Views
+
     // calendarData.allDayClassNames = (arg) => objRef.invokeMethod('AllDayClassNames', arg); // Todo
     // calendarData.allDayContent = (arg) => objRef.invokeMethod('AllDayContent', arg); // Todo
     calendarData.allDayDidMount = (arg) => objRef.invokeMethod('AllDayDidMount', arg.text);
@@ -16,6 +24,17 @@ export function render(elementId, serializedData, objRef) {
     // calendarData.viewClassNames = (arg) => objRef.invokeMethod('ViewClassNames', arg); // Todo
     calendarData.viewDidMount = (arg) => objRef.invokeMethod('ViewDidMount', arg.view, arg.el);
     calendarData.viewWillUnmount = (arg) => objRef.invokeMethod('ViewWillUnmount', arg.view, arg.el);
+
+    // endregion
+
+    // region Date and Time
+
+    
+
+    // endregion
+
+    // region Events
+
     calendarData.eventAdd = (eventAddInfo) => objRef.invokeMethod('EventAdd', eventAddInfo);
     calendarData.eventChange = (eventChangeInfo) => objRef.invokeMethod('EventChange', eventChangeInfo);
     calendarData.eventRemove = (eventRemoveInfo) => objRef.invokeMethod('EventRemove', eventRemoveInfo);
@@ -43,6 +62,8 @@ export function render(elementId, serializedData, objRef) {
     // calendarData.moreLinkContent = (arg) => objRef.invokeMethod('MoreLinkContent', arg.num, arg.text); // Todo
     calendarData.moreLinkDidMount = (num, text) => objRef.invokeMethod('MoreLinkDidMount', num, text);
     calendarData.moreLinkWillUnmount = (num, text) => objRef.invokeMethod('MoreLinkWillUnmount', num, text);
+
+    // endregion
 
     var calendarElement = document.getElementById(elementId);
     var calendar = new FullCalendar.Calendar(calendarElement, calendarData);
