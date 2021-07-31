@@ -25,6 +25,15 @@ namespace FullCalendarBlazor.Models
         public int? WindowResizeDelay { get; set; }
         public string StickyHeaderDates { get; set; }
         public string StickyFooterScrollbar { get; set; }
+        public bool? FixedWeekCount { get; set; }
+        public bool? ShowNonCurrentDates { get; set; }
+        public int? EventMinHeight { get; set; }
+        public int? EventShortHeight { get; set; }
+        public bool? SlotEventOverlap { get; set; }
+        public bool? AllDaySlot { get; set; }
+        public DateTimeFormatter ListDayFormat { get; set; }
+        public DateTimeFormatter ListDaySideFormat { get; set; }
+        public string InitialView { get; set; }
 
         // Events
         public IEnumerable<Event> Events { get; set; }

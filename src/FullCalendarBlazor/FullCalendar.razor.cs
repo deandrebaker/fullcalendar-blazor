@@ -37,6 +37,26 @@ namespace FullCalendarBlazor
         [Parameter] public string StickyHeaderDates { get; set; }
         [Parameter] public string StickyFooterScrollbar { get; set; }
         [Parameter] public Action<object> OnWindowResize { get; set; }
+        [Parameter] public bool? FixedWeekCount { get; set; }
+        [Parameter] public bool? ShowNonCurrentDates { get; set; }
+        [Parameter] public int? EventMinHeight { get; set; }
+        [Parameter] public int? EventShortHeight { get; set; }
+        [Parameter] public bool? SlotEventOverlap { get; set; }
+        [Parameter] public bool? AllDaySlot { get; set; }
+        // [Parameter] public Func<string, IEnumerable<string>> OnAllDayClassNames { get; set; } // Todo
+        // [Parameter] public Func<string, object> OnAllDayContent { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<string> OnAllDayDidMount { get; set; }
+        [Parameter] public Action<string> OnAllDayWillUnmount { get; set; }
+        [Parameter] public DateTimeFormatter ListDayFormat { get; set; }
+        [Parameter] public DateTimeFormatter ListDaySideFormat { get; set; }
+        // [Parameter] public Func<object, IEnumerable<string>> OnNoEventsClassNames { get; set; } // Todo
+        // [Parameter] public Func<object, object> OnNoEventsContent { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<object> OnNoEventsDidMount { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<object> OnNoEventsWillUnmount { get; set; } // Todo: Replace object with proper type
+        [Parameter] public string InitialView { get; set; }
+        // [Parameter] public Func<object, IEnumerable<string>> OnViewClassNames { get; set; } // Todo
+        [Parameter] public Action<object, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<object, object> OnViewWillUnmount { get; set; } // Todo: Replace object with proper type
         [Parameter] public IEnumerable<Event> Events { get; set; }
         // Todo: Add EventDataTransform delegate for transforming events from a source (https://fullcalendar.io/docs/eventDataTransform)
         [Parameter] public bool? DefaultAllDay { get; set; }
@@ -56,7 +76,7 @@ namespace FullCalendarBlazor
         [Parameter] public bool? DisplayEventTime { get; set; }
         [Parameter] public bool? DisplayEventEnd { get; set; }
         [Parameter] public TimeSpan? NextDayThreshold { get; set; }
-        public IEnumerable<string> EventOrder { get; set; }
+        [Parameter] public IEnumerable<string> EventOrder { get; set; }
         [Parameter] public bool? EventOrderStrict { get; set; }
         [Parameter] public bool? ProgressiveEventRendering { get; set; }
         // [Parameter] public Func<EventRenderInfo, IEnumerable<string>> OnEventClassNames { get; set; } // Todo
@@ -103,6 +123,17 @@ namespace FullCalendarBlazor
 
         // JSInvokable methods
         [JSInvokable] public void WindowResize(object view) => OnWindowResize?.Invoke(view); // Todo: Replace object with View type
+        // [JSInvokable] public IEnumerable<string> AllDayClassNames(object arg) => OnAllDayClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
+        // [JSInvokable] public object AllDayContent(object arg) => OnAllDayContent?.Invoke(arg); // Todo
+        [JSInvokable] public void AllDayDidMount(string text) => OnAllDayDidMount?.Invoke(text);
+        [JSInvokable] public void AllDayWillUnmount(string text) => OnAllDayWillUnmount?.Invoke(text);
+        // [JSInvokable] public IEnumerable<string> NoEventsClassNames(object arg) => OnNoEventsClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
+        // [JSInvokable] public object NoEventsContent(object arg) => OnNoEventsContent?.Invoke(arg); // Todo
+        [JSInvokable] public void NoEventsDidMount(object el) => OnNoEventsDidMount?.Invoke(el);
+        [JSInvokable] public void NoEventsWillUnmount(object el) => OnNoEventsWillUnmount?.Invoke(el);
+        // [JSInvokable] public IEnumerable<string> ViewClassNames(object arg) => OnViewClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
+        [JSInvokable] public void ViewDidMount(object view, object el) => OnViewDidMount?.Invoke(view, el);
+        [JSInvokable] public void ViewWillUnmount(object view, object el) => OnViewWillUnmount?.Invoke(view, el);
         [JSInvokable] public void EventAdd(EventAddInfo eventAddInfo) => OnEventAdd?.Invoke(eventAddInfo);
         [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
         [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
@@ -152,6 +183,15 @@ namespace FullCalendarBlazor
                 WindowResizeDelay = WindowResizeDelay,
                 StickyHeaderDates = StickyHeaderDates,
                 StickyFooterScrollbar = StickyFooterScrollbar,
+                FixedWeekCount = FixedWeekCount,
+                ShowNonCurrentDates = ShowNonCurrentDates,
+                EventMinHeight = EventMinHeight,
+                EventShortHeight = EventShortHeight,
+                SlotEventOverlap = SlotEventOverlap,
+                AllDaySlot = AllDaySlot,
+                ListDayFormat = ListDayFormat,
+                ListDaySideFormat = ListDaySideFormat,
+                InitialView = InitialView,
                 Events = Events,
                 DefaultAllDay = DefaultAllDay,
                 DefaultAllDayEventDuration = DefaultAllDayEventDuration,
