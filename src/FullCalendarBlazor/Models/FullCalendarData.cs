@@ -120,5 +120,13 @@ namespace FullCalendarBlazor.Models
         public DateTimeFormatter DayPopoverFormat { get; set; }
 
         #endregion
+
+        #region International
+
+        public string Locale { get; set; }
+        public string Direction { get; set; }
+        public DayOfWeek? FirstDay { get; set; }
+
+        #endregion
     }
 }
