@@ -202,6 +202,14 @@ namespace FullCalendarBlazor
 
         #endregion
 
+        #region International
+
+        [Parameter] public string Locale { get; set; }
+        [Parameter] public string Direction { get; set; }
+        [Parameter] public DayOfWeek? FirstDay { get; set; }
+
+        #endregion
+
         // JSInvokable methods
 
         #region Overall Display
@@ -391,6 +399,14 @@ namespace FullCalendarBlazor
                 EventMaxStack = EventMaxStack,
                 MoreLinkClick = MoreLinkClick,
                 DayPopoverFormat = DayPopoverFormat,
+
+                #endregion
+
+                #region International
+
+                Locale = Locale,
+                Direction = Direction,
+                FirstDay = FirstDay,
 
                 #endregion
             };
