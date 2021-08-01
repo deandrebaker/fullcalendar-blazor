@@ -72,7 +72,65 @@ namespace FullCalendarBlazor
 
         #region Date and Time
 
-        
+        [Parameter] public bool? Weekends { get; set; }
+        [Parameter] public IEnumerable<DayOfWeek> HiddenDays { get; set; }
+        [Parameter] public bool? DayHeaders { get; set; }
+        [Parameter] public DateTimeFormatter DayHeaderFormat { get; set; }
+        [Parameter] public int? DayMinWidth { get; set; }
+        // Todo: OnDayHeaderClassNames
+        // Todo: OnDayHeaderContent
+        [Parameter] public Action<DayHeaderRenderInfo> OnDayHeaderDidMount { get; set; }
+        [Parameter] public Action<DayHeaderRenderInfo> OnDayHeaderWillUnmount { get; set; }
+        // Todo: OnDayCellClassNames
+        // Todo: OnDayCellContent
+        [Parameter] public Action<DayCellRenderInfo> OnDayCellDidMount { get; set; }
+        [Parameter] public Action<DayCellRenderInfo> OnDayCellWillUnmount { get; set; }
+        [Parameter] public TimeSpan? SlotDuration { get; set; }
+        [Parameter] public TimeSpan? SlotLabelInterval { get; set; }
+        [Parameter] public DateTimeFormatter SlotLabelFormat { get; set; }
+        [Parameter] public TimeSpan? SlotMinTime { get; set; }
+        [Parameter] public TimeSpan? SlotMaxTime { get; set; }
+        [Parameter] public TimeSpan? ScrollTime { get; set; }
+        [Parameter] public bool? ScrollTimeReset { get; set; }
+        // Todo: OnSlotLabelClassNames
+        // Todo: OnSlotLabelContent
+        [Parameter] public Action<SlotRenderInfo> OnSlotLabelDidMount { get; set; }
+        [Parameter] public Action<SlotRenderInfo> OnSlotLabelWillUnmount { get; set; }
+        // Todo: OnSlotLaneClassNames
+        // Todo: OnSlotLaneContent
+        [Parameter] public Action<SlotRenderInfo> OnSlotLaneDidMount { get; set; }
+        [Parameter] public Action<SlotRenderInfo> OnSlotLaneWillUnmount { get; set; }
+        [Parameter] public Action<DateInfo> OnDatesSet { get; set; }
+        [Parameter] public DateTime? InitialDate { get; set; }
+        [Parameter] public TimeSpan? DateIncrement { get; set; }
+        [Parameter] public string DateAlignment { get; set; }
+        [Parameter] public DateRange ValidRange { get; set; }
+        [Parameter] public bool? NavLinks { get; set; }
+        [Parameter] public string NavLinkDayClick { get; set; }
+        [Parameter] public string NavLinkWeekClick { get; set; }
+        [Parameter] public bool? WeekNumbers { get; set; }
+        [Parameter] public string WeekNumberCalculation { get; set; }
+        [Parameter] public string WeekText { get; set; }
+        [Parameter] public DateTimeFormatter WeekNumberFormat { get; set; }
+        // Todo: OnWeekNumberClassNames
+        // Todo: OnWeekNumberContent
+        [Parameter] public Action<string, string, DateTime> OnWeekNumberDidMount { get; set; }
+        [Parameter] public Action<string, string, DateTime> OnWeekNumberWillUnmount { get; set; }
+        [Parameter] public bool? Selectable { get; set; }
+        [Parameter] public bool? SelectMirror { get; set; }
+        [Parameter] public bool? UnselectAuto { get; set; }
+        [Parameter] public string UnselectCancel { get; set; }
+        [Parameter] public bool? SelectOverlap { get; set; }
+        [Parameter] public object SelectConstraint { get; set; }
+        [Parameter] public Func<SelectInfo, bool> OnSelectAllow { get; set; }
+        [Parameter] public int? SelectMinDistance { get; set; }
+        [Parameter] public bool? NowIndicator { get; set; }
+        [Parameter] public DateTime? Now { get; set; }
+        // Todo: OnNowIndicatorClassNames
+        // Todo: OnNowIndicatorContent
+        [Parameter] public Action<NowIndicatorInfo> OnNowIndicatorDidMount { get; set; }
+        [Parameter] public Action<NowIndicatorInfo> OnNowIndicatorWillUnmount { get; set; }
+        [Parameter] public object BusinessHours { get; set; }
 
         #endregion
 
@@ -170,7 +228,20 @@ namespace FullCalendarBlazor
 
         #region Date and Time
 
-        
+        [JSInvokable] public void DayHeaderDidMount(DayHeaderRenderInfo dayHeaderRenderInfo) => OnDayHeaderDidMount?.Invoke(dayHeaderRenderInfo);
+        [JSInvokable] public void DayHeaderWillUnmount(DayHeaderRenderInfo dayHeaderRenderInfo) => OnDayHeaderWillUnmount?.Invoke(dayHeaderRenderInfo);
+        [JSInvokable] public void DayCellDidMount(DayCellRenderInfo dayCellRenderInfo) => OnDayCellDidMount?.Invoke(dayCellRenderInfo);
+        [JSInvokable] public void DayCellWillUnmount(DayCellRenderInfo dayCellRenderInfo) => OnDayCellWillUnmount?.Invoke(dayCellRenderInfo);
+        [JSInvokable] public void SlotLabelDidMount(SlotRenderInfo slotRenderInfo) => OnSlotLabelDidMount?.Invoke(slotRenderInfo);
+        [JSInvokable] public void SlotLabelWillUnmount(SlotRenderInfo slotRenderInfo) => OnSlotLabelWillUnmount?.Invoke(slotRenderInfo);
+        [JSInvokable] public void SlotLaneDidMount(SlotRenderInfo slotRenderInfo) => OnSlotLaneDidMount?.Invoke(slotRenderInfo);
+        [JSInvokable] public void SlotLaneWillUnmount(SlotRenderInfo slotRenderInfo) => OnSlotLaneWillUnmount?.Invoke(slotRenderInfo);
+        [JSInvokable] public void DatesSet(DateInfo dateInfo) => OnDatesSet?.Invoke(dateInfo);
+        [JSInvokable] public void WeekNumberDidMount(string num, string text, DateTime date) => OnWeekNumberDidMount?.Invoke(num, text, date);
+        [JSInvokable] public void WeekNumberWillUnmount(string num, string text, DateTime date) => OnWeekNumberWillUnmount?.Invoke(num, text, date);
+        [JSInvokable] public void SelectAllow(SelectInfo selectInfo) => OnSelectAllow?.Invoke(selectInfo);
+        [JSInvokable] public void NowIndicatorDidMount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorDidMount?.Invoke(nowIndicatorInfo);
+        [JSInvokable] public void NowIndicatorWillUnmount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorWillUnmount?.Invoke(nowIndicatorInfo);
 
         #endregion
 
@@ -248,7 +319,39 @@ namespace FullCalendarBlazor
 
                 #region Date and Time
 
-                
+                Weekends = Weekends,
+                HiddenDays = HiddenDays,
+                DayHeaders = DayHeaders,
+                DayHeaderFormat = DayHeaderFormat,
+                DayMinWidth = DayMinWidth,
+                SlotDuration = SlotDuration,
+                SlotLabelInterval = SlotLabelInterval,
+                SlotLabelFormat = SlotLabelFormat,
+                SlotMinTime = SlotMinTime,
+                SlotMaxTime = SlotMaxTime,
+                ScrollTime = ScrollTime,
+                ScrollTimeReset = ScrollTimeReset,
+                InitialDate = InitialDate,
+                DateIncrement = DateIncrement,
+                DateAlignment = DateAlignment,
+                ValidRange = ValidRange,
+                NavLinks = NavLinks,
+                NavLinkDayClick = NavLinkDayClick,
+                NavLinkWeekClick = NavLinkWeekClick,
+                WeekNumbers = WeekNumbers,
+                WeekNumberCalculation = WeekNumberCalculation,
+                WeekText = WeekText,
+                WeekNumberFormat = WeekNumberFormat,
+                Selectable = Selectable,
+                SelectMirror = SelectMirror,
+                UnselectAuto = UnselectAuto,
+                UnselectCancel = UnselectCancel,
+                SelectOverlap = SelectOverlap,
+                SelectConstraint = SelectConstraint,
+                SelectMinDistance = SelectMinDistance,
+                NowIndicator = NowIndicator,
+                Now = Now,
+                BusinessHours = BusinessHours,
 
                 #endregion
 

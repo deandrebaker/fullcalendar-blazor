@@ -45,7 +45,39 @@ namespace FullCalendarBlazor.Models
 
         #region Date and Time
 
-        
+        public bool? Weekends { get; set; }
+        public IEnumerable<DayOfWeek> HiddenDays { get; set; }
+        public bool? DayHeaders { get; set; }
+        public DateTimeFormatter DayHeaderFormat { get; set; }
+        public int? DayMinWidth { get; set; }
+        public TimeSpan? SlotDuration { get; set; }
+        public TimeSpan? SlotLabelInterval { get; set; }
+        public DateTimeFormatter SlotLabelFormat { get; set; }
+        public TimeSpan? SlotMinTime { get; set; }
+        public TimeSpan? SlotMaxTime { get; set; }
+        public TimeSpan? ScrollTime { get; set; }
+        public bool? ScrollTimeReset { get; set; }
+        public DateTime? InitialDate { get; set; }
+        public TimeSpan? DateIncrement { get; set; }
+        public string DateAlignment { get; set; }
+        public DateRange ValidRange { get; set; }
+        public bool? NavLinks { get; set; }
+        public string NavLinkDayClick { get; set; } // Todo: Could be a function
+        public string NavLinkWeekClick { get; set; } // Todo: Could be a function
+        public bool? WeekNumbers { get; set; }
+        public string WeekNumberCalculation { get; set; }
+        public string WeekText { get; set; }
+        public DateTimeFormatter WeekNumberFormat { get; set; }
+        public bool? Selectable { get; set; }
+        public bool? SelectMirror { get; set; }
+        public bool? UnselectAuto { get; set; }
+        public string UnselectCancel { get; set; }
+        public bool? SelectOverlap { get; set; }
+        public object SelectConstraint { get; set; }
+        public int? SelectMinDistance { get; set; }
+        public bool? NowIndicator { get; set; }
+        public DateTime? Now { get; set; }
+        public object BusinessHours { get; set; }
 
         #endregion
 
