@@ -1,7 +1,11 @@
 ﻿import {FullCalendar} from "./fullcalendar/main.min.js";
 
+// Globals
+
+const calendars = {};
+
 export function render(elementId, serializedData, objRef) {
-    var calendarData = JSON.parse(serializedData);
+    const calendarData = JSON.parse(serializedData);
 
     // Calendar functions
 
@@ -69,7 +73,7 @@ export function render(elementId, serializedData, objRef) {
 
     // endregion
 
-    var calendarElement = document.getElementById(elementId);
-    var calendar = new FullCalendar.Calendar(calendarElement, calendarData);
-    calendar.render();
+    const calendarElement = document.getElementById(elementId);
+    calendars[elementId] = new FullCalendar.Calendar(calendarElement, calendarData);
+    calendars[elementId].render();
 }
