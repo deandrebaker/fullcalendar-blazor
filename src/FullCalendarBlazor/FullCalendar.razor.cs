@@ -40,7 +40,7 @@ namespace FullCalendarBlazor
         [Parameter] public int? WindowResizeDelay { get; set; }
         [Parameter] public bool? StickyHeaderDates { get; set; }
         [Parameter] public bool? StickyFooterScrollbar { get; set; }
-        [Parameter] public Action<View> OnWindowResize { get; set; }
+        [Parameter] public Action<View> OnWindowResize { get; set; } // Todo: Should this be EventCallback?
 
         #endregion
 
