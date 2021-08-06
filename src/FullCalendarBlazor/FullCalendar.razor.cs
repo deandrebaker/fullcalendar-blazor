@@ -40,7 +40,7 @@ namespace FullCalendarBlazor
         [Parameter] public int? WindowResizeDelay { get; set; }
         [Parameter] public bool? StickyHeaderDates { get; set; }
         [Parameter] public bool? StickyFooterScrollbar { get; set; }
-        [Parameter] public Action<View> OnWindowResize { get; set; } // Todo: Should this be EventCallback?
+        [Parameter] public Action<View> OnWindowResize { get; set; }
 
         #endregion
 
@@ -52,18 +52,19 @@ namespace FullCalendarBlazor
         [Parameter] public int? EventShortHeight { get; set; }
         [Parameter] public bool? SlotEventOverlap { get; set; }
         [Parameter] public bool? AllDaySlot { get; set; }
-        // [Parameter] public Func<string, IEnumerable<string>> OnAllDayClassNames { get; set; } // Todo
-        // [Parameter] public Func<string, object> OnAllDayContent { get; set; } // Todo: Replace object with proper type
+        // Todo: Add OnAllDayClassNames EventCallback
+        // Todo: Add OnAllDayContent EventCallback
         [Parameter] public Action<string> OnAllDayDidMount { get; set; }
         [Parameter] public Action<string> OnAllDayWillUnmount { get; set; }
         [Parameter] public DateTimeFormatter ListDayFormat { get; set; }
         [Parameter] public DateTimeFormatter ListDaySideFormat { get; set; }
-        // [Parameter] public Func<object, IEnumerable<string>> OnNoEventsClassNames { get; set; } // Todo
-        // [Parameter] public Func<object, object> OnNoEventsContent { get; set; } // Todo: Replace object with proper type
+        // Todo: Add OnNoEventsClassNames EventCallback
+        // Todo: Add OnNoEventsContent EventCallback
         [Parameter] public Action<object> OnNoEventsDidMount { get; set; } // Todo: Replace object with proper type
         [Parameter] public Action<object> OnNoEventsWillUnmount { get; set; } // Todo: Replace object with proper type
         [Parameter] public string InitialView { get; set; }
-        // [Parameter] public Func<object, IEnumerable<string>> OnViewClassNames { get; set; } // Todo
+        [Parameter] public Dictionary<string, object> Views { get; set; }
+        // Todo: Add OnViewClassNames EventCallback
         [Parameter] public Action<View, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
         [Parameter] public Action<View, object> OnViewWillUnmount { get; set; } // Todo: Replace object with proper type
 
