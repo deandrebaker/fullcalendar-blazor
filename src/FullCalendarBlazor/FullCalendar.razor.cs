@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using FullCalendarBlazor.Models;
 using FullCalendarBlazor.Models.DateAndTime;
 using FullCalendarBlazor.Models.Display;
 using FullCalendarBlazor.Models.Events;
@@ -288,129 +285,129 @@ namespace FullCalendarBlazor
         // Lifecycle methods
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            var data = new FullCalendarData
+            var calendarData = new
             {
                 #region Overall Display
 
-                HeaderToolbar = HeaderToolbar,
-                FooterToolbar = FooterToolbar,
-                TitleFormat = TitleFormat,
-                TitleRangeSeparator = TitleRangeSeparator,
-                ButtonText = ButtonText,
-                ButtonIcons = ButtonIcons,
-                CustomButtons = CustomButtons,
-                ThemeSystem = ThemeSystem,
-                Height = Height,
-                ContentHeight = ContentHeight,
-                AspectRatio = AspectRatio,
-                ExpandRows = ExpandRows,
-                HandleWindowResize = HandleWindowResize,
-                WindowResizeDelay = WindowResizeDelay,
-                StickyHeaderDates = StickyHeaderDates,
-                StickyFooterScrollbar = StickyFooterScrollbar,
+                HeaderToolbar,
+                FooterToolbar,
+                TitleFormat,
+                TitleRangeSeparator,
+                ButtonText,
+                ButtonIcons,
+                CustomButtons,
+                ThemeSystem,
+                Height,
+                ContentHeight,
+                AspectRatio,
+                ExpandRows,
+                HandleWindowResize,
+                WindowResizeDelay,
+                StickyHeaderDates,
+                StickyFooterScrollbar,
 
                 #endregion
 
                 #region Views
 
-                FixedWeekCount = FixedWeekCount,
-                ShowNonCurrentDates = ShowNonCurrentDates,
-                EventMinHeight = EventMinHeight,
-                EventShortHeight = EventShortHeight,
-                SlotEventOverlap = SlotEventOverlap,
-                AllDaySlot = AllDaySlot,
-                ListDayFormat = ListDayFormat,
-                ListDaySideFormat = ListDaySideFormat,
-                InitialView = InitialView,
+                FixedWeekCount,
+                ShowNonCurrentDates,
+                EventMinHeight,
+                EventShortHeight,
+                SlotEventOverlap,
+                AllDaySlot,
+                ListDayFormat,
+                ListDaySideFormat,
+                InitialView,
 
                 #endregion
 
                 #region Date and Time
 
-                Weekends = Weekends,
-                HiddenDays = HiddenDays,
-                DayHeaders = DayHeaders,
-                DayHeaderFormat = DayHeaderFormat,
-                DayMinWidth = DayMinWidth,
-                SlotDuration = SlotDuration,
-                SlotLabelInterval = SlotLabelInterval,
-                SlotLabelFormat = SlotLabelFormat,
-                SlotMinTime = SlotMinTime,
-                SlotMaxTime = SlotMaxTime,
-                ScrollTime = ScrollTime,
-                ScrollTimeReset = ScrollTimeReset,
-                InitialDate = InitialDate,
-                DateIncrement = DateIncrement,
-                DateAlignment = DateAlignment,
-                ValidRange = ValidRange,
-                NavLinks = NavLinks,
-                NavLinkDayClick = NavLinkDayClick,
-                NavLinkWeekClick = NavLinkWeekClick,
-                WeekNumbers = WeekNumbers,
-                WeekNumberCalculation = WeekNumberCalculation,
-                WeekText = WeekText,
-                WeekNumberFormat = WeekNumberFormat,
-                Selectable = Selectable,
-                SelectMirror = SelectMirror,
-                UnselectAuto = UnselectAuto,
-                UnselectCancel = UnselectCancel,
-                SelectOverlap = SelectOverlap,
-                SelectConstraint = SelectConstraint,
-                SelectMinDistance = SelectMinDistance,
-                NowIndicator = NowIndicator,
-                Now = Now,
-                BusinessHours = BusinessHours,
+                Weekends,
+                HiddenDays,
+                DayHeaders,
+                DayHeaderFormat,
+                DayMinWidth,
+                SlotDuration,
+                SlotLabelInterval,
+                SlotLabelFormat,
+                SlotMinTime,
+                SlotMaxTime,
+                ScrollTime,
+                ScrollTimeReset,
+                InitialDate,
+                DateIncrement,
+                DateAlignment,
+                ValidRange,
+                NavLinks,
+                NavLinkDayClick,
+                NavLinkWeekClick,
+                WeekNumbers,
+                WeekNumberCalculation,
+                WeekText,
+                WeekNumberFormat,
+                Selectable,
+                SelectMirror,
+                UnselectAuto,
+                UnselectCancel,
+                SelectOverlap,
+                SelectConstraint,
+                SelectMinDistance,
+                NowIndicator,
+                Now,
+                BusinessHours,
 
                 #endregion
 
                 #region Event
 
-                Events = Events,
-                DefaultAllDay = DefaultAllDay,
-                DefaultAllDayEventDuration = DefaultAllDayEventDuration,
-                DefaultTimedEventDuration = DefaultTimedEventDuration,
-                ForceEventDuration = ForceEventDuration,
-                EventColor = EventColor,
-                EventBackgroundColor = EventBackgroundColor,
-                EventBorderColor = EventBorderColor,
-                EventTextColor = EventTextColor,
-                EventDisplay = EventDisplay,
-                EventTimeFormat = EventTimeFormat,
-                DisplayEventTime = DisplayEventTime,
-                DisplayEventEnd = DisplayEventEnd,
-                NextDayThreshold = NextDayThreshold,
-                EventOrder = EventOrder,
-                EventOrderStrict = EventOrderStrict,
-                ProgressiveEventRendering = ProgressiveEventRendering,
-                Editable = Editable,
-                EventStartEditable = EventStartEditable,
-                EventResizableFromStart = EventResizableFromStart,
-                EventDurationEditable = EventDurationEditable,
-                EventResourceEditable = EventResourceEditable,
-                Droppable = Droppable,
-                EventDragMinDistance = EventDragMinDistance,
-                DragRevertDuration = DragRevertDuration,
-                DragScroll = DragScroll,
-                SnapDuration = SnapDuration,
-                AllDayMaintainDuration = AllDayMaintainDuration,
-                EventConstraint = EventConstraint,
-                DayMaxEventRows = DayMaxEventRows,
-                DayMaxEvents = DayMaxEvents,
-                EventMaxStack = EventMaxStack,
-                MoreLinkClick = MoreLinkClick,
-                DayPopoverFormat = DayPopoverFormat,
+                Events,
+                DefaultAllDay,
+                DefaultAllDayEventDuration,
+                DefaultTimedEventDuration,
+                ForceEventDuration,
+                EventColor,
+                EventBackgroundColor,
+                EventBorderColor,
+                EventTextColor,
+                EventDisplay,
+                EventTimeFormat,
+                DisplayEventTime,
+                DisplayEventEnd,
+                NextDayThreshold,
+                EventOrder,
+                EventOrderStrict,
+                ProgressiveEventRendering,
+                Editable,
+                EventStartEditable,
+                EventResizableFromStart,
+                EventDurationEditable,
+                EventResourceEditable,
+                Droppable,
+                EventDragMinDistance,
+                DragRevertDuration,
+                DragScroll,
+                SnapDuration,
+                AllDayMaintainDuration,
+                EventConstraint,
+                DayMaxEventRows,
+                DayMaxEvents,
+                EventMaxStack,
+                MoreLinkClick,
+                DayPopoverFormat,
 
                 #endregion
 
                 #region International
 
-                Locale = Locale,
-                Direction = Direction,
-                FirstDay = FirstDay,
+                Locale,
+                Direction,
+                FirstDay,
 
                 #endregion
             };
-            await JsInterop.Render(Id, data, DotNetObjectReference.Create(this));
+            await JsInterop.Render(Id, calendarData, DotNetObjectReference.Create(this));
         }
     }
 }
