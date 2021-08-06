@@ -28,16 +28,18 @@ namespace FullCalendarBlazor
         [Parameter] public string TitleRangeSeparator { get; set; }
         [Parameter] public Dictionary<string, string> ButtonText { get; set; }
         [Parameter] public Dictionary<string, string> ButtonIcons { get; set; }
-        [Parameter] public object CustomButtons { get; set; }
+        [Parameter] public Dictionary<string, CustomButton> CustomButtons { get; set; }
         [Parameter] public string ThemeSystem { get; set; }
+        // Todo: Add configuration for Bootstrap theming
         [Parameter] public string Height { get; set; }
         [Parameter] public string ContentHeight { get; set; }
         [Parameter] public double? AspectRatio { get; set; }
         [Parameter] public bool? ExpandRows { get; set; }
+        // Todo: Add method for UpdateSize
         [Parameter] public bool? HandleWindowResize { get; set; }
         [Parameter] public int? WindowResizeDelay { get; set; }
-        [Parameter] public string StickyHeaderDates { get; set; }
-        [Parameter] public string StickyFooterScrollbar { get; set; }
+        [Parameter] public bool? StickyHeaderDates { get; set; }
+        [Parameter] public bool? StickyFooterScrollbar { get; set; }
         [Parameter] public Action<View> OnWindowResize { get; set; }
 
         #endregion

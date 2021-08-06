@@ -10,6 +10,6 @@ namespace FullCalendarBlazor.Models.Views
         public DateTime? ActiveEnd { get; set; }
         public DateTime? CurrentStart { get; set; }
         public DateTime? CurrentEnd { get; set; }
-        public object Calendar { get; set; }
+        public object Calendar { get; set; } // Todo: Check that this points to JS object
     }
 }

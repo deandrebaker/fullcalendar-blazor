@@ -1,6 +1,6 @@
 ﻿namespace FullCalendarBlazor.Models.DateAndTime
 {
-    public static class DateTimeFormatterOptions
+    public static class DateTimeFormatterOption
     {
         public static string Numeric => "numeric";
         public static string TwoDigit => "2-digit";

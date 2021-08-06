@@ -9,11 +9,11 @@
         public string Hour { get; set; }
         public string Minute { get; set; }
         public string Second { get; set; }
-        public string Hour12 { get; set; }
+        public bool? Hour12 { get; set; }
         public string TimeZoneName { get; set; }
         public string Week { get; set; }
-        public string Meridiem { get; set; }
-        public bool OmitZeroMinute { get; set; }
-        public bool OmitCommas { get; set; }
+        public object Meridiem { get; set; }
+        public bool? OmitZeroMinute { get; set; }
+        public bool? OmitCommas { get; set; }
     }
 }
