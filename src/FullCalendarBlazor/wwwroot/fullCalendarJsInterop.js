@@ -9,11 +9,20 @@ export function render(elementId, serializedData, objRef) {
 
     // Transform Calendar Properties
 
-    let headerToolbar = calendarData.headerToolbar;
-    Object.getOwnPropertyNames(headerToolbar ?? {}).forEach(prop => headerToolbar[prop] = headerToolbar[prop].join(''));
+    ["headerToolbar", "footerToolbar"]
+        .forEach(propName => 
+            Object.getOwnPropertyNames(calendarData[propName] ?? {})
+                .forEach(innerPropName => 
+                    calendarData[propName][innerPropName] = calendarData[propName][innerPropName].join(''))
+        );
 
-    let footerToolbar = calendarData.footerToolbar;
-    Object.getOwnPropertyNames(footerToolbar ?? {}).forEach(prop => footerToolbar[prop] = footerToolbar[prop].join(''));
+    ["titleFormat", "listDayFormat", "listDaySideFormat", "dayHeaderFormat", "slotLabelFormat", "weekNumberFormat", "eventTimeFormat", "dayPopoverFormat"]
+        .forEach(propName => {
+            if (calendarData[propName]?.omitMeridiem) {
+                calendarData[propName].meridiem = false;
+                delete calendarData[propName].omitMeridiem;
+            }
+        });
 
     // Calendar functions
 
