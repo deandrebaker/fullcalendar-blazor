@@ -24,6 +24,6 @@ namespace FullCalendarBlazor.Models.Display
         [EnumMember(Value = "listYear")] ListYear,
         [EnumMember(Value = "listMonth")] ListMonth,
         [EnumMember(Value = "listWeek")] ListWeek,
-        [EnumMember(Value = "listDay")] ListDay
+        [EnumMember(Value = "listDay")] ListDay,
     }
 }
