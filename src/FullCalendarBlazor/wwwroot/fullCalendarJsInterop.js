@@ -7,6 +7,14 @@ const calendars = {};
 export function render(elementId, serializedData, objRef) {
     const calendarData = JSON.parse(serializedData);
 
+    // Transform Calendar Properties
+
+    let headerToolbar = calendarData.headerToolbar;
+    Object.getOwnPropertyNames(headerToolbar ?? {}).forEach(prop => headerToolbar[prop] = headerToolbar[prop].join(''));
+
+    let footerToolbar = calendarData.footerToolbar;
+    Object.getOwnPropertyNames(footerToolbar ?? {}).forEach(prop => footerToolbar[prop] = footerToolbar[prop].join(''));
+
     // Calendar functions
 
     // region Overall Display
