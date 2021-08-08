@@ -1,15 +1,20 @@
-﻿namespace FullCalendarBlazor.Models.Views
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace FullCalendarBlazor.Models.Views
 {
-    public static class ViewOption
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum ViewOption
     {
-        public static string DayGridMonth => "dayGridMonth";
-        public static string DayGridWeek => "dayGridWeek";
-        public static string DayGridDay => "dayGridDay";
-        public static string TimeGridWeek => "timeGridWeek";
-        public static string TimeGridDay => "timeGridDay";
-        public static string ListYear => "listYear";
-        public static string ListMonth => "listMonth";
-        public static string ListWeek => "listWeek";
-        public static string ListDay => "listDay";
+        [EnumMember(Value = "dayGridMonth")] DayGridMonth,
+        [EnumMember(Value = "dayGridWeek")] DayGridWeek,
+        [EnumMember(Value = "dayGridDay")] DayGridDay,
+        [EnumMember(Value = "timeGridWeek")] TimeGridWeek,
+        [EnumMember(Value = "timeGridDay")] TimeGridDay,
+        [EnumMember(Value = "listYear")] ListYear,
+        [EnumMember(Value = "listMonth")] ListMonth,
+        [EnumMember(Value = "listWeek")] ListWeek,
+        [EnumMember(Value = "listDay")] ListDay,
     }
 }

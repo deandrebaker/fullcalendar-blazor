@@ -9,8 +9,12 @@ export function render(elementId, serializedData, objRef) {
 
     // Transform Calendar Properties
 
-    if (calendarData.omitHeaderToolbar) calendarData.headerToolbar = false;
-    if (calendarData.omitFooterToolbar) calendarData.footerToolbar = false;
+    ["headerToolbar", "footerToolbar", "listDayFormat", "listDaySideFormat"]
+        .forEach(propName => {
+            const omitPropName = `omit${propName[0].toUpperCase()}${propName.substr(1)}`;
+            if (calendarData[omitPropName]) calendarData[propName] = false;
+            delete calendarData[omitPropName];
+        });
 
     ["headerToolbar", "footerToolbar"]
         .forEach(propName => 
@@ -24,10 +28,6 @@ export function render(elementId, serializedData, objRef) {
             if (calendarData[propName]?.omitMeridiem) calendarData[propName].meridiem = false;
             delete calendarData[propName]?.omitMeridiem;
         });
-
-    // Delete Non-Calendar Properties
-    ["omitHeaderToolbar", "omitFooterToolbar"]
-        .forEach(propName => delete calendarData[propName]);
 
     // Calendar functions
 
@@ -43,6 +43,7 @@ export function render(elementId, serializedData, objRef) {
     calendarData.allDayWillUnmount = (arg) => objRef.invokeMethod('AllDayWillUnmount', arg.text);
     calendarData.noEventsDidMount = (arg) => objRef.invokeMethod('NoEventsDidMount', arg.el);
     calendarData.noEventsWillUnmount = (arg) => objRef.invokeMethod('NoEventsWillUnmount', arg.el);
+    calendarData.visibleRange ??= (currentDate) => objRef.invokeMethod('GetVisibleRange', currentDate);
     calendarData.viewDidMount = (arg) => objRef.invokeMethod('ViewDidMount', arg.view, arg.el);
     calendarData.viewWillUnmount = (arg) => objRef.invokeMethod('ViewWillUnmount', arg.view, arg.el);
 

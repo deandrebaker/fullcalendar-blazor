@@ -59,12 +59,19 @@ namespace FullCalendarBlazor
         [Parameter] public Action<string> OnAllDayDidMount { get; set; }
         [Parameter] public Action<string> OnAllDayWillUnmount { get; set; }
         [Parameter] public DateTimeFormatter ListDayFormat { get; set; }
+        [Parameter] public bool? OmitListDayFormat { get; set; }
         [Parameter] public DateTimeFormatter ListDaySideFormat { get; set; }
+        [Parameter] public bool? OmitListDaySideFormat { get; set; }
         // Todo: Add OnNoEventsClassNames EventCallback
         // Todo: Add OnNoEventsContent EventCallback
         [Parameter] public Action<object> OnNoEventsDidMount { get; set; } // Todo: Replace object with proper type
         [Parameter] public Action<object> OnNoEventsWillUnmount { get; set; } // Todo: Replace object with proper type
-        [Parameter] public string InitialView { get; set; }
+        [Parameter] public TimeSpan? Duration { get; set; }
+        [Parameter] public int? DayCount { get; set; }
+        [Parameter] public DateRange VisibleRange { get; set; }
+        [Parameter] public Func<DateTime, DateRange> OnGetVisibleRange { get; set; }
+        // Todo: Add support for custom views
+        [Parameter] public ViewOption? InitialView { get; set; }
         [Parameter] public Dictionary<string, object> Views { get; set; }
         // Todo: Add OnViewClassNames EventCallback
         [Parameter] public Action<View, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
@@ -230,6 +237,7 @@ namespace FullCalendarBlazor
         // [JSInvokable] public object NoEventsContent(object arg) => OnNoEventsContent?.Invoke(arg); // Todo
         [JSInvokable] public void NoEventsDidMount(object el) => OnNoEventsDidMount?.Invoke(el);
         [JSInvokable] public void NoEventsWillUnmount(object el) => OnNoEventsWillUnmount?.Invoke(el);
+        [JSInvokable] public DateRange GetVisibleRange(DateTime dateTime) => OnGetVisibleRange?.Invoke(dateTime);
         // [JSInvokable] public IEnumerable<string> ViewClassNames(object arg) => OnViewClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
         [JSInvokable] public void ViewDidMount(View view, object el) => OnViewDidMount?.Invoke(view, el);
         [JSInvokable] public void ViewWillUnmount(View view, object el) => OnViewWillUnmount?.Invoke(view, el);
@@ -324,7 +332,12 @@ namespace FullCalendarBlazor
                 SlotEventOverlap,
                 AllDaySlot,
                 ListDayFormat,
+                OmitListDayFormat,
                 ListDaySideFormat,
+                OmitListDaySideFormat,
+                Duration,
+                DayCount,
+                VisibleRange,
                 InitialView,
 
                 #endregion
