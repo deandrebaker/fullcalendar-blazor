@@ -9,6 +9,9 @@ export function render(elementId, serializedData, objRef) {
 
     // Transform Calendar Properties
 
+    if (calendarData.omitHeaderToolbar) calendarData.headerToolbar = false;
+    if (calendarData.omitFooterToolbar) calendarData.footerToolbar = false;
+
     ["headerToolbar", "footerToolbar"]
         .forEach(propName => 
             Object.getOwnPropertyNames(calendarData[propName] ?? {})
@@ -18,11 +21,13 @@ export function render(elementId, serializedData, objRef) {
 
     ["titleFormat", "listDayFormat", "listDaySideFormat", "dayHeaderFormat", "slotLabelFormat", "weekNumberFormat", "eventTimeFormat", "dayPopoverFormat"]
         .forEach(propName => {
-            if (calendarData[propName]?.omitMeridiem) {
-                calendarData[propName].meridiem = false;
-                delete calendarData[propName].omitMeridiem;
-            }
+            if (calendarData[propName]?.omitMeridiem) calendarData[propName].meridiem = false;
+            delete calendarData[propName]?.omitMeridiem;
         });
+
+    // Delete Non-Calendar Properties
+    ["omitHeaderToolbar", "omitFooterToolbar"]
+        .forEach(propName => delete calendarData[propName]);
 
     // Calendar functions
 

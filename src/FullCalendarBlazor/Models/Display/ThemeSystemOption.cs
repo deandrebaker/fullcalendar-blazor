@@ -1,8 +1,13 @@
-﻿namespace FullCalendarBlazor.Models.Display
+﻿using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace FullCalendarBlazor.Models.Display
 {
-    public static class ThemeSystemOption
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum ThemeSystemOption
     {
-        public static string Standard => "standard";
-        public static string Bootstrap => "bootstrap";
+        [EnumMember(Value = "standard")] Standard,
+        [EnumMember(Value = "bootstrap")] Bootstrap,
     }
 }

@@ -23,13 +23,15 @@ namespace FullCalendarBlazor
         #region Overall Display
 
         [Parameter] public Toolbar HeaderToolbar { get; set; }
+        [Parameter] public bool? OmitHeaderToolbar { get; set; }
         [Parameter] public Toolbar FooterToolbar { get; set; }
+        [Parameter] public bool? OmitFooterToolbar { get; set; }
         [Parameter] public DateTimeFormatter TitleFormat { get; set; }
         [Parameter] public string TitleRangeSeparator { get; set; }
         [Parameter] public Dictionary<string, string> ButtonText { get; set; }
         [Parameter] public Dictionary<string, string> ButtonIcons { get; set; }
         [Parameter] public Dictionary<string, CustomButton> CustomButtons { get; set; }
-        [Parameter] public string ThemeSystem { get; set; }
+        [Parameter] public ThemeSystemOption? ThemeSystem { get; set; }
         // Todo: Add configuration for Bootstrap theming
         [Parameter] public string Height { get; set; }
         [Parameter] public string ContentHeight { get; set; }
