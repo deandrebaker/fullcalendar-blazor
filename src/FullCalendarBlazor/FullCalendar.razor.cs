@@ -295,7 +295,9 @@ namespace FullCalendarBlazor
                 #region Overall Display
 
                 HeaderToolbar,
+                OmitHeaderToolbar,
                 FooterToolbar,
+                OmitFooterToolbar,
                 TitleFormat,
                 TitleRangeSeparator,
                 ButtonText,
