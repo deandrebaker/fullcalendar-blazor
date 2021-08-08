@@ -73,6 +73,8 @@ namespace FullCalendarBlazor
         // Todo: Add support for custom views
         [Parameter] public ViewOption? InitialView { get; set; }
         [Parameter] public Dictionary<string, object> Views { get; set; }
+        // Todo: Add method to get current view
+        // Todo: Add method to change view
         // Todo: Add OnViewClassNames EventCallback
         [Parameter] public Action<View, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
         [Parameter] public Action<View, object> OnViewWillUnmount { get; set; } // Todo: Replace object with proper type
