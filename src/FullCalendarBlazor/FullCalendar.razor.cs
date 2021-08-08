@@ -216,7 +216,7 @@ namespace FullCalendarBlazor
 
         #region Overall Display
 
-        [JSInvokable] public void WindowResize(View view) => OnWindowResize?.Invoke(view); // Todo: Replace object with View type
+        [JSInvokable] public void WindowResize(View view) => OnWindowResize?.Invoke(view);
 
         #endregion
 
