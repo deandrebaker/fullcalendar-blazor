@@ -166,49 +166,56 @@ namespace FullCalendarBlazor
         #region Events
 
         [Parameter] public IEnumerable<Event> Events { get; set; }
-        // Todo: Add EventDataTransform delegate for transforming events from a source (https://fullcalendar.io/docs/eventDataTransform)
+        [Parameter] public Func<object, Event> OnEventDataTransform { get; set; }
         [Parameter] public bool? DefaultAllDay { get; set; }
         [Parameter] public TimeSpan? DefaultAllDayEventDuration { get; set; }
         [Parameter] public TimeSpan? DefaultTimedEventDuration { get; set; }
         [Parameter] public bool? ForceEventDuration { get; set; }
+        // Todo: Calendar::getEvents() method
+        // Todo: Calendar::getEventsById() method
+        // Todo: Calendar::addEvent() method
         [Parameter] public Action<EventAddInfo> OnEventAdd { get; set; }
         [Parameter] public Action<EventChangeInfo> OnEventChange { get; set; }
         [Parameter] public Action<EventAddInfo> OnEventRemove { get; set; }
         [Parameter] public Action<IEnumerable<Event>> OnEventsSet { get; set; }
+        // Todo: Event sources
         [Parameter] public string EventColor { get; set; }
         [Parameter] public string EventBackgroundColor { get; set; }
         [Parameter] public string EventBorderColor { get; set; }
         [Parameter] public string EventTextColor { get; set; }
-        [Parameter] public string EventDisplay { get; set; }
+        [Parameter] public EventDisplayOption? EventDisplay { get; set; }
         [Parameter] public DateTimeFormatter EventTimeFormat { get; set; }
         [Parameter] public bool? DisplayEventTime { get; set; }
         [Parameter] public bool? DisplayEventEnd { get; set; }
         [Parameter] public TimeSpan? NextDayThreshold { get; set; }
         [Parameter] public IEnumerable<string> EventOrder { get; set; }
+        [Parameter] public Func<Event, Event, int> OnGetEventOrder { get; set; }
         [Parameter] public bool? EventOrderStrict { get; set; }
         [Parameter] public bool? ProgressiveEventRendering { get; set; }
         // [Parameter] public Func<EventRenderInfo, IEnumerable<string>> OnEventClassNames { get; set; } // Todo
         // [Parameter] public Func<EventRenderInfo, object> OnEventContent { get; set; } // Todo: Replace object with proper type
         [Parameter] public Action<EventRenderInfo> OnEventDidMount { get; set; }
         [Parameter] public Action<EventRenderInfo> OnEventWillUnmount { get; set; }
+        [Parameter] public Action<EventClickInfo> OnEventClick { get; set; }
+        [Parameter] public Action<EventClickInfo> OnEventMouseEnter { get; set; }
+        [Parameter] public Action<EventClickInfo> OnEventMouseLeave { get; set; }
         [Parameter] public bool? Editable { get; set; }
         [Parameter] public bool? EventStartEditable { get; set; }
         [Parameter] public bool? EventResizableFromStart { get; set; }
         [Parameter] public bool? EventDurationEditable { get; set; }
         [Parameter] public bool? EventResourceEditable { get; set; }
         [Parameter] public bool? Droppable { get; set; }
-        [Parameter] public Action<EventClickInfo> OnEventClick { get; set; }
-        [Parameter] public Action<EventClickInfo> OnEventMouseEnter { get; set; }
-        [Parameter] public Action<EventClickInfo> OnEventMouseLeave { get; set; }
         [Parameter] public int? EventDragMinDistance { get; set; }
         [Parameter] public int? DragRevertDuration { get; set; }
         [Parameter] public bool? DragScroll { get; set; }
         [Parameter] public TimeSpan? SnapDuration { get; set; }
         [Parameter] public bool? AllDayMaintainDuration { get; set; }
         // Todo: Add FixedMirrorParent parameter (https://fullcalendar.io/docs/fixedMirrorParent)
+        [Parameter] public bool? EventOverlap { get; set; }
         [Parameter] public Func<Event, Event, bool> OnEventOverlap { get; set; }
         [Parameter] public object EventConstraint { get; set; }
         [Parameter] public Func<EventAllowInfo, Event, bool> OnEventAllow { get; set; }
+        [Parameter] public string DropAccept { get; set; }
         [Parameter] public Func<object, bool> OnDropAccept { get; set; }
         [Parameter] public Action<EventDragInfo> OnEventDragStart { get; set; }
         [Parameter] public Action<EventDragInfo> OnEventDragStop { get; set; }
@@ -220,9 +227,12 @@ namespace FullCalendarBlazor
         [Parameter] public Action<EventDragInfo> OnEventResizeStop { get; set; }
         [Parameter] public Action<EventResizeInfo> OnEventResize { get; set; }
         [Parameter] public int? DayMaxEventRows { get; set; }
+        [Parameter] public bool? LimitDayEventRowsToHeight { get; set; }
         [Parameter] public int? DayMaxEvents { get; set; }
+        [Parameter] public bool? LimitDayEventsToHeight { get; set; }
         [Parameter] public int? EventMaxStack { get; set; }
         [Parameter] public string MoreLinkClick { get; set; }
+        [Parameter] public Action<MoreLinkClickInfo> OnMoreLinkClick { get; set; }
         [Parameter] public DateTimeFormatter DayPopoverFormat { get; set; }
         // [Parameter] public Func<int, string, IEnumerable<string>> OnMoreLinkClassNames { get; set; } // Todo
         // [Parameter] public Func<int, string, object> OnMoreLinkContent { get; set; } // Todo: Replace object with proper type // Todo
@@ -293,10 +303,12 @@ namespace FullCalendarBlazor
 
         #region Event
 
+        [JSInvokable] public Event EventDataTransform(object eventData) => OnEventDataTransform?.Invoke(eventData);
         [JSInvokable] public void EventAdd(EventAddInfo eventAddInfo) => OnEventAdd?.Invoke(eventAddInfo);
         [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
         [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
         [JSInvokable] public void EventsSet(IEnumerable<Event> events) => OnEventsSet?.Invoke(events);
+        [JSInvokable] public int? GetEventOrder(Event eventA, Event eventB) => OnGetEventOrder?.Invoke(eventA, eventB);
         // [JSInvokable] public IEnumerable<string> EventClassNames(EventRenderInfo eventRenderInfo) => OnEventClassNames?.Invoke(eventRenderInfo) ?? Enumerable.Empty<string>(); // Todo
         // [JSInvokable] public object EventContent(EventRenderInfo eventRenderInfo) => OnEventContent?.Invoke(eventRenderInfo); // Todo
         [JSInvokable] public void EventDidMount(EventRenderInfo eventRenderInfo) => OnEventDidMount?.Invoke(eventRenderInfo);
@@ -304,9 +316,9 @@ namespace FullCalendarBlazor
         [JSInvokable] public void EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
         [JSInvokable] public void EventMouseEnter(EventClickInfo mouseEnterInfo) => OnEventMouseEnter?.Invoke(mouseEnterInfo);
         [JSInvokable] public void EventMouseLeave(EventClickInfo mouseLeaveInfo) => OnEventMouseLeave?.Invoke(mouseLeaveInfo);
-        [JSInvokable] public bool EventOverlap(Event stillEvent, Event movingEvent) => OnEventOverlap?.Invoke(stillEvent, movingEvent) ?? true;
+        [JSInvokable] public bool EventOverlapMethod(Event stillEvent, Event movingEvent) => OnEventOverlap?.Invoke(stillEvent, movingEvent) ?? true;
         [JSInvokable] public bool EventAllow(EventAllowInfo eventAllowInfo, Event draggedEvent) => OnEventAllow?.Invoke(eventAllowInfo, draggedEvent) ?? true;
-        [JSInvokable] public bool DropAccept(object draggableItem) => OnDropAccept?.Invoke(draggableItem) ?? true; // Todo: Replace object with DraggableItem type.
+        [JSInvokable] public bool DropAcceptMethod(object draggableItem) => OnDropAccept?.Invoke(draggableItem) ?? true; // Todo: Replace object with DraggableItem type.
         [JSInvokable] public void EventDragStart(EventDragInfo eventDragInfo) => OnEventDragStart?.Invoke(eventDragInfo);
         [JSInvokable] public void EventDragStop(EventDragInfo eventDragInfo) => OnEventDragStop?.Invoke(eventDragInfo);
         [JSInvokable] public void EventDrop(EventDropInfo eventDropInfo) => OnEventDrop?.Invoke(eventDropInfo);
@@ -316,6 +328,7 @@ namespace FullCalendarBlazor
         [JSInvokable] public void EventResizeStart(EventDragInfo eventResizeInfo) => OnEventResizeStart?.Invoke(eventResizeInfo);
         [JSInvokable] public void EventResizeStop(EventDragInfo eventResizeInfo) => OnEventResizeStop?.Invoke(eventResizeInfo);
         [JSInvokable] public void EventResize(EventResizeInfo eventResizeInfo) => OnEventResize?.Invoke(eventResizeInfo);
+        [JSInvokable] public void MoreLinkClickMethod(MoreLinkClickInfo info) => OnMoreLinkClick?.Invoke(info);
         // [JSInvokable] public IEnumerable<string> MoreLinkClassNames(int num, string text) => OnMoreLinkClassNames?.Invoke(num, text) ?? Enumerable.Empty<string>(); // Todo
         // [JSInvokable] public object MoreLinkContent(int num, string text) => OnMoreLinkContent?.Invoke(num, text); // Todo
         [JSInvokable] public void MoreLinkDidMount(int num, string text) => OnMoreLinkDidMount?.Invoke(num, text);
@@ -438,9 +451,12 @@ namespace FullCalendarBlazor
                 DragScroll,
                 SnapDuration,
                 AllDayMaintainDuration,
+                EventOverlap,
                 EventConstraint,
                 DayMaxEventRows,
+                LimitDayEventRowsToHeight,
                 DayMaxEvents,
+                LimitDayEventsToHeight,
                 EventMaxStack,
                 MoreLinkClick,
                 DayPopoverFormat,
@@ -462,6 +478,10 @@ namespace FullCalendarBlazor
                 UseGetSelectOverlap = OnGetSelectOverlap != null,
                 UseGetSelectAllow = OnGetSelectAllow != null,
                 UseGetNow = OnGetNow != null,
+                UseGetEventOrder = OnGetEventOrder != null,
+                UseEventOverlapMethod = OnEventOverlap != null,
+                UseDropAcceptMethod = OnDropAccept != null,
+                UseMoreLinkClickMethod = OnMoreLinkClick != null,
             };
             await JsInterop.Render(Id, calendarData, DotNetObjectReference.Create(this));
         }

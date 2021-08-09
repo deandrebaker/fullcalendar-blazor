@@ -16,6 +16,16 @@ export function render(elementId, serializedData, objRef) {
             delete calendarData[omitPropName];
         });
 
+    if (calendarData.limitDayEventRowsToHeight) {
+        calendarData.dayMaxEventRows = true;
+        delete calendarData.limitDayEventRowsToHeight;
+    }
+
+    if (calendarData.limitDayEventsToHeight) {
+        calendarData.dayMaxEvents = true;
+        delete calendarData.limitDayEventsToHeight;
+    }
+
     ["headerToolbar", "footerToolbar"]
         .forEach(propName => 
             Object.getOwnPropertyNames(calendarData[propName] ?? {})
@@ -79,18 +89,20 @@ export function render(elementId, serializedData, objRef) {
 
     // region Events
 
+    calendarData.eventDataTransform = (eventData) => objRef.invokeMethod('EventDataTransform', eventData) ?? false;
     calendarData.eventAdd = (eventAddInfo) => objRef.invokeMethod('EventAdd', eventAddInfo);
     calendarData.eventChange = (eventChangeInfo) => objRef.invokeMethod('EventChange', eventChangeInfo);
     calendarData.eventRemove = (eventRemoveInfo) => objRef.invokeMethod('EventRemove', eventRemoveInfo);
     calendarData.eventsSet = (events) => objRef.invokeMethod('EventsSet', events);
+    if (calendarData.useGetEventOrder) calendarData.eventOrder = (eventA, eventB) => objRef.invokeMethod('GetEventOrder', eventA, eventB);
     calendarData.eventDidMount = (eventRenderInfo) => objRef.invokeMethod('EventDidMount', eventRenderInfo);
     calendarData.eventWillUnmount = (eventRenderInfo) => objRef.invokeMethod('EventWillUnmount', eventRenderInfo);
     calendarData.eventClick = (eventClickInfo) => objRef.invokeMethod('EventClick', eventClickInfo);
     calendarData.eventMouseEnter = (mouseEnterInfo) => objRef.invokeMethod('EventMouseEnter', mouseEnterInfo);
     calendarData.eventMouseLeave = (mouseLeaveInfo) => objRef.invokeMethod('EventMouseLeave', mouseLeaveInfo);
-    calendarData.eventOverlap = (stillEvent, movingEvent) => objRef.invokeMethod('EventOverlap', stillEvent, movingEvent);
+    if (calendarData.useEventOverlapMethod) calendarData.eventOverlap = (stillEvent, movingEvent) => objRef.invokeMethod('EventOverlapMethod', stillEvent, movingEvent);
     calendarData.eventAllow = (eventAllowInfo, draggedEvent) => objRef.invokeMethod('EventAllow', eventAllowInfo, draggedEvent);
-    calendarData.dropAccept = (draggableEl) => objRef.invokeMethod('DropAccept', draggableEl);
+    if (calendarData.useDropAcceptMethod) calendarData.dropAccept = (draggableEl) => objRef.invokeMethod('DropAcceptMethod', draggableEl);
     calendarData.eventDragStart = (eventDragInfo) => objRef.invokeMethod('EventDragStart', eventDragInfo);
     calendarData.eventDragStop = (eventDragInfo) => objRef.invokeMethod('EventDragStop', eventDragInfo);
     calendarData.eventDrop = (eventDropInfo) => objRef.invokeMethod('EventDrop', eventDropInfo);
@@ -100,6 +112,7 @@ export function render(elementId, serializedData, objRef) {
     calendarData.eventResizeStart = (eventResizeInfo) => objRef.invokeMethod('EventResizeStart', eventResizeInfo);
     calendarData.eventResizeStop = (eventResizeInfo) => objRef.invokeMethod('EventResizeStop', eventResizeInfo);
     calendarData.eventResize = (eventResizeInfo) => objRef.invokeMethod('EventResize', eventResizeInfo);
+    if (calendarData.useMoreLinkClickMethod) calendarData.moreLinkClick = (moreLinkClickInfo) => objRef.invokeMethod('MoreLinkClickMethod', moreLinkClickInfo);
     calendarData.moreLinkDidMount = (num, text) => objRef.invokeMethod('MoreLinkDidMount', num, text);
     calendarData.moreLinkWillUnmount = (num, text) => objRef.invokeMethod('MoreLinkWillUnmount', num, text);
 

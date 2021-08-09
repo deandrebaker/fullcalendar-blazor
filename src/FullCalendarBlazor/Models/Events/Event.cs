@@ -37,5 +37,18 @@ namespace FullCalendarBlazor.Models.Events
         public string TextColor { get; set; }
         public string Rrule { get; set; }
         public object ExtendedProps { get; set; }
+        // Todo: setProp
+        // Todo: setExtendedProp
+        // Todo: setStart
+        // Todo: setEnd
+        // Todo: setDates
+        // Todo: setAllDay
+        // Todo: moveStart
+        // Todo: moveEnd
+        // Todo: formatRange
+        // Todo: remove
+        // Todo: getResources
+        // Todo: setResources
+        // Todo: toPlainObject
     }
 }
