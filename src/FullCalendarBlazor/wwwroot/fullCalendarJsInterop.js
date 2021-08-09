@@ -43,7 +43,7 @@ export function render(elementId, serializedData, objRef) {
     calendarData.allDayWillUnmount = (arg) => objRef.invokeMethod('AllDayWillUnmount', arg.text);
     calendarData.noEventsDidMount = (arg) => objRef.invokeMethod('NoEventsDidMount', arg.el);
     calendarData.noEventsWillUnmount = (arg) => objRef.invokeMethod('NoEventsWillUnmount', arg.el);
-    calendarData.visibleRange ??= (currentDate) => objRef.invokeMethod('GetVisibleRange', currentDate);
+    if (calendarData.useGetVisibleRange) calendarData.visibleRange = (currentDate) => objRef.invokeMethod('GetVisibleRange', currentDate);
     calendarData.viewDidMount = (arg) => objRef.invokeMethod('ViewDidMount', arg.view, arg.el);
     calendarData.viewWillUnmount = (arg) => objRef.invokeMethod('ViewWillUnmount', arg.view, arg.el);
 
@@ -60,9 +60,18 @@ export function render(elementId, serializedData, objRef) {
     calendarData.slotLaneDidMount = (slotRenderInfo) => objRef.invokeMethod('SlotLaneDidMount', slotRenderInfo);
     calendarData.slotLaneWillUnmount = (slotRenderInfo) => objRef.invokeMethod('SlotLaneWillUnmount', slotRenderInfo);
     calendarData.datesSet = (dateInfo) => objRef.invokeMethod('DatesSet', dateInfo);
+    if (calendarData.useNavLinkDayClickMethod) calendarData.navLinkDayClick = (date, jsEvent) => objRef.invokeMethod('NavLinkDayClickMethod', date, jsEvent);
+    if (calendarData.useNavLinkWeekClickMethod) calendarData.navLinkWeekClick = (weekStart, jsEvent) => objRef.invokeMethod('NavLinkWeekClickMethod', weekStart, jsEvent);
+    if (calendarData.useGetWeekNumber) calendarData.weekNumberCalculation = (date) => objRef.invokeMethod('GetWeekNumber', date);
     calendarData.weekNumberDidMount = (num, text, date) => objRef.invokeMethod('WeekNumberDidMount', num, text, date);
     calendarData.weekNumberWillUnmount = (num, text, date) => objRef.invokeMethod('WeekNumberWillUnmount', num, text, date);
-    calendarData.selectAllow = (selectInfo) => objRef.invokeMethod('SelectAllow', selectInfo);
+    if (calendarData.useGetSelectOverlap) calendarData.selectOverlap = (overlappedEvent) => objRef.invokeMethod('GetSelectOverlap', overlappedEvent);
+    if (calendarData.useGetSelectAllow) calendarData.selectAllow = (selectInfo) => objRef.invokeMethod('GetSelectAllow', selectInfo);
+    calendarData.nowIndicatorDidMount = (nowIndicatorInfo) => objRef.invokeMethod('NowIndicatorDidMount', nowIndicatorInfo);
+    calendarData.dateClick = (dateClickInfo) => objRef.invokeMethod('DateClick', dateClickInfo);
+    calendarData.select = (selectionInfo) => objRef.invokeMethod('Select', selectionInfo);
+    calendarData.unselect = (jsEvent, view) => objRef.invokeMethod('Unselect', jsEvent, view);
+    if (calendarData.useGetNow) calendarData.now = () => objRef.invokeMethod('GetNow');
     calendarData.nowIndicatorDidMount = (nowIndicatorInfo) => objRef.invokeMethod('NowIndicatorDidMount', nowIndicatorInfo);
     calendarData.nowIndicatorWillUnmount = (nowIndicatorInfo) => objRef.invokeMethod('NowIndicatorWillUnmount', nowIndicatorInfo);
 

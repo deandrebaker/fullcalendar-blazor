@@ -111,16 +111,27 @@ namespace FullCalendarBlazor
         // Todo: OnSlotLaneContent
         [Parameter] public Action<SlotRenderInfo> OnSlotLaneDidMount { get; set; }
         [Parameter] public Action<SlotRenderInfo> OnSlotLaneWillUnmount { get; set; }
+        // Todo: Add method for scrollToTime
         [Parameter] public Action<DateInfo> OnDatesSet { get; set; }
         [Parameter] public DateTime? InitialDate { get; set; }
         [Parameter] public TimeSpan? DateIncrement { get; set; }
-        [Parameter] public string DateAlignment { get; set; }
+        [Parameter] public DateAlignmentOption? DateAlignment { get; set; }
         [Parameter] public DateRange ValidRange { get; set; }
+        // Todo: Calendar::prev() method
+        // Todo: Calendar::next() method
+        // Todo: Calendar::prevYear() method
+        // Todo: Calendar::nextYear() method
+        // Todo: Calendar::today() method
+        // Todo: Calendar::gotoDate() method
+        // Todo: Calendar::getDate() method
         [Parameter] public bool? NavLinks { get; set; }
         [Parameter] public string NavLinkDayClick { get; set; }
+        [Parameter] public Action<DateTime, object> OnNavLinkDayClick { get; set; }
         [Parameter] public string NavLinkWeekClick { get; set; }
+        [Parameter] public Action<DateTime, object> OnNavLinkWeekClick { get; set; }
         [Parameter] public bool? WeekNumbers { get; set; }
-        [Parameter] public string WeekNumberCalculation { get; set; }
+        [Parameter] public WeekNumberOption? WeekNumberCalculation { get; set; }
+        [Parameter] public Func<DateTime, int> OnGetWeekNumber { get; set; }
         [Parameter] public string WeekText { get; set; }
         [Parameter] public DateTimeFormatter WeekNumberFormat { get; set; }
         // Todo: OnWeekNumberClassNames
@@ -132,11 +143,18 @@ namespace FullCalendarBlazor
         [Parameter] public bool? UnselectAuto { get; set; }
         [Parameter] public string UnselectCancel { get; set; }
         [Parameter] public bool? SelectOverlap { get; set; }
+        [Parameter] public Func<Event, bool> OnGetSelectOverlap { get; set; }
         [Parameter] public object SelectConstraint { get; set; }
-        [Parameter] public Func<SelectInfo, bool> OnSelectAllow { get; set; }
+        [Parameter] public Func<SelectInfo, bool> OnGetSelectAllow { get; set; }
         [Parameter] public int? SelectMinDistance { get; set; }
+        [Parameter] public Action<DateClickInfo> OnDateClick { get; set; }
+        [Parameter] public Action<SelectionInfo> OnSelect { get; set; }
+        [Parameter] public Action<object, View> OnUnselect { get; set; } // Todo
+        // Todo: Calendar::select()
+        // Todo: Calendar::unselect()
         [Parameter] public bool? NowIndicator { get; set; }
         [Parameter] public DateTime? Now { get; set; }
+        [Parameter] public Func<DateTime> OnGetNow { get; set; }
         // Todo: OnNowIndicatorClassNames
         // Todo: OnNowIndicatorContent
         [Parameter] public Action<NowIndicatorInfo> OnNowIndicatorDidMount { get; set; }
@@ -257,9 +275,17 @@ namespace FullCalendarBlazor
         [JSInvokable] public void SlotLaneDidMount(SlotRenderInfo slotRenderInfo) => OnSlotLaneDidMount?.Invoke(slotRenderInfo);
         [JSInvokable] public void SlotLaneWillUnmount(SlotRenderInfo slotRenderInfo) => OnSlotLaneWillUnmount?.Invoke(slotRenderInfo);
         [JSInvokable] public void DatesSet(DateInfo dateInfo) => OnDatesSet?.Invoke(dateInfo);
+        [JSInvokable] public void NavLinkDayClickMethod(DateTime date, object jsEvent) => OnNavLinkDayClick?.Invoke(date, jsEvent);
+        [JSInvokable] public void NavLinkWeekClickMethod(DateTime weekStart, object jsEvent) => OnNavLinkWeekClick?.Invoke(weekStart, jsEvent);
+        [JSInvokable] public int? GetWeekNumber(DateTime date) => OnGetWeekNumber?.Invoke(date);
         [JSInvokable] public void WeekNumberDidMount(string num, string text, DateTime date) => OnWeekNumberDidMount?.Invoke(num, text, date);
         [JSInvokable] public void WeekNumberWillUnmount(string num, string text, DateTime date) => OnWeekNumberWillUnmount?.Invoke(num, text, date);
-        [JSInvokable] public void SelectAllow(SelectInfo selectInfo) => OnSelectAllow?.Invoke(selectInfo);
+        [JSInvokable] public bool? GetSelectOverlap(Event overlappedEvent) => OnGetSelectOverlap?.Invoke(overlappedEvent);
+        [JSInvokable] public bool? GetSelectAllow(SelectInfo selectInfo) => OnGetSelectAllow?.Invoke(selectInfo);
+        [JSInvokable] public void DateClick(DateClickInfo dateClickInfo) => OnDateClick?.Invoke(dateClickInfo);
+        [JSInvokable] public void Select(SelectionInfo selectionInfo) => OnSelect?.Invoke(selectionInfo);
+        [JSInvokable] public void Unselect(object jsEvent, View view) => OnUnselect?.Invoke(jsEvent, view);
+        [JSInvokable] public DateTime? GetNow() => OnGetNow?.Invoke();
         [JSInvokable] public void NowIndicatorDidMount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorDidMount?.Invoke(nowIndicatorInfo);
         [JSInvokable] public void NowIndicatorWillUnmount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorWillUnmount?.Invoke(nowIndicatorInfo);
 
@@ -428,6 +454,14 @@ namespace FullCalendarBlazor
                 FirstDay,
 
                 #endregion
+
+                UseGetVisibleRange = OnGetVisibleRange != null,
+                UseNavLinkDayClickMethod = OnNavLinkDayClick != null,
+                UseNavLinkWeekClickMethod = OnNavLinkWeekClick != null,
+                UseGetWeekNumber = OnGetWeekNumber != null,
+                UseGetSelectOverlap = OnGetSelectOverlap != null,
+                UseGetSelectAllow = OnGetSelectAllow != null,
+                UseGetNow = OnGetNow != null,
             };
             await JsInterop.Render(Id, calendarData, DotNetObjectReference.Create(this));
         }
