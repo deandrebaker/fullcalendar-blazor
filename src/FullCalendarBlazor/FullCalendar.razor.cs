@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FullCalendarBlazor.Models.DateAndTime;
 using FullCalendarBlazor.Models.Display;
 using FullCalendarBlazor.Models.Events;
+using FullCalendarBlazor.Models.International;
 using FullCalendarBlazor.Models.Views;
 using FullCalendarBlazor.Services;
 using Microsoft.AspNetCore.Components;
@@ -244,7 +245,7 @@ namespace FullCalendarBlazor
         #region International
 
         [Parameter] public string Locale { get; set; }
-        [Parameter] public string Direction { get; set; }
+        [Parameter] public DirectionOption? Direction { get; set; }
         [Parameter] public DayOfWeek? FirstDay { get; set; }
 
         #endregion
