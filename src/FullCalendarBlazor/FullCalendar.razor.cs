@@ -247,6 +247,7 @@ namespace FullCalendarBlazor
         [Parameter] public string Locale { get; set; }
         [Parameter] public DirectionOption? Direction { get; set; }
         [Parameter] public DayOfWeek? FirstDay { get; set; }
+        [Parameter] public string TimeZone { get; set; }
 
         #endregion
 
@@ -469,6 +470,7 @@ namespace FullCalendarBlazor
                 Locale,
                 Direction,
                 FirstDay,
+                TimeZone,
 
                 #endregion
 
