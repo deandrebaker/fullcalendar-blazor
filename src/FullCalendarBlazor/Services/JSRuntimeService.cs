@@ -42,6 +42,12 @@ namespace FullCalendarBlazor.Services
             return await module.InvokeAsync<TValue>("executeMethod", elementId, methodName, args);
         }
 
+        public async ValueTask<TValue> GetPropertyAsync<TValue>(string elementId, string propName)
+        {
+            var module = await _moduleTask.Value;
+            return await module.InvokeAsync<TValue>("getProperty", elementId, propName);
+        }
+
         public async ValueTask PrintAsync(object obj)
         {
             var module = await _moduleTask.Value;

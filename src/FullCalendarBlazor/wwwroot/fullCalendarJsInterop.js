@@ -127,6 +127,10 @@ export function executeMethod(elementId, methodName, args) {
     return calendars[elementId][methodName](...args);
 }
 
+export function getProperty(elementId, propName) {
+    return calendars[elementId][propName];
+}
+
 export function print(obj) {
     console.log(obj);
 }

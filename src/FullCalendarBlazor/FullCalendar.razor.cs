@@ -332,7 +332,7 @@ namespace FullCalendarBlazor
 
         #region Views
 
-        // public async Task<View> GetViewAsync() => await JsInterop.ExecuteMethodAsync<View>(Id, "view");
+        public async Task<View> GetViewAsync() => await JsInterop.GetPropertyAsync<View>(Id, "view");
         public async Task ChangeViewAsync(ViewOption viewOption) =>  await JsInterop.ExecuteVoidMethodAsync(Id, "changeView", viewOption);
         public async Task ChangeViewAsync(ViewOption viewOption, DateTime date) =>  await JsInterop.ExecuteVoidMethodAsync(Id, "changeView", viewOption, date);
 
