@@ -5,6 +5,9 @@ namespace FullCalendarBlazor.Services
 {
     public interface IJSRuntimeService
     {
-        ValueTask Render(string elementId, object calendarData, DotNetObjectReference<FullCalendar> objRef);
+        ValueTask RenderAsync(string elementId, object calendarData, DotNetObjectReference<FullCalendar> objRef);
+        ValueTask ExecuteVoidMethodAsync(string elementId, string methodName, params object[] args);
+        ValueTask<TValue> ExecuteMethodAsync<TValue>(string elementId, string methodName, params object[] args);
+        ValueTask PrintAsync(object obj);
     }
 }

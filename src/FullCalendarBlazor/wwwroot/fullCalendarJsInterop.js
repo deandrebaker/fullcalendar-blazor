@@ -89,7 +89,7 @@ export function render(elementId, serializedData, objRef) {
 
     // region Events
 
-    calendarData.eventDataTransform = (eventData) => objRef.invokeMethod('EventDataTransform', eventData) ?? false;
+    if (calendarData.useEventDataTransform) calendarData.eventDataTransform = (eventData) => objRef.invokeMethod('EventDataTransform', eventData) ?? false;
     calendarData.eventAdd = (eventAddInfo) => objRef.invokeMethod('EventAdd', eventAddInfo);
     calendarData.eventChange = (eventChangeInfo) => objRef.invokeMethod('EventChange', eventChangeInfo);
     calendarData.eventRemove = (eventRemoveInfo) => objRef.invokeMethod('EventRemove', eventRemoveInfo);
@@ -121,4 +121,12 @@ export function render(elementId, serializedData, objRef) {
     const calendarElement = document.getElementById(elementId);
     calendars[elementId] = new FullCalendar.Calendar(calendarElement, calendarData);
     calendars[elementId].render();
+}
+
+export function executeMethod(elementId, methodName, args) {
+    return calendars[elementId][methodName](...args);
+}
+
+export function print(obj) {
+    console.log(obj);
 }

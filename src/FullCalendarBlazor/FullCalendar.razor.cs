@@ -38,7 +38,6 @@ namespace FullCalendarBlazor
         [Parameter] public string ContentHeight { get; set; }
         [Parameter] public double? AspectRatio { get; set; }
         [Parameter] public bool? ExpandRows { get; set; }
-        // Todo: Add method for UpdateSize
         [Parameter] public bool? HandleWindowResize { get; set; }
         [Parameter] public int? WindowResizeDelay { get; set; }
         [Parameter] public bool? StickyHeaderDates { get; set; }
@@ -74,8 +73,6 @@ namespace FullCalendarBlazor
         // Todo: Add support for custom views
         [Parameter] public ViewOption? InitialView { get; set; }
         [Parameter] public Dictionary<string, object> Views { get; set; }
-        // Todo: Add method to get current view
-        // Todo: Add method to change view
         // Todo: Add OnViewClassNames EventCallback
         [Parameter] public Action<View, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
         [Parameter] public Action<View, object> OnViewWillUnmount { get; set; } // Todo: Replace object with proper type
@@ -112,19 +109,11 @@ namespace FullCalendarBlazor
         // Todo: OnSlotLaneContent
         [Parameter] public Action<SlotRenderInfo> OnSlotLaneDidMount { get; set; }
         [Parameter] public Action<SlotRenderInfo> OnSlotLaneWillUnmount { get; set; }
-        // Todo: Add method for scrollToTime
         [Parameter] public Action<DateInfo> OnDatesSet { get; set; }
         [Parameter] public DateTime? InitialDate { get; set; }
         [Parameter] public TimeSpan? DateIncrement { get; set; }
         [Parameter] public DateAlignmentOption? DateAlignment { get; set; }
         [Parameter] public DateRange ValidRange { get; set; }
-        // Todo: Calendar::prev() method
-        // Todo: Calendar::next() method
-        // Todo: Calendar::prevYear() method
-        // Todo: Calendar::nextYear() method
-        // Todo: Calendar::today() method
-        // Todo: Calendar::gotoDate() method
-        // Todo: Calendar::getDate() method
         [Parameter] public bool? NavLinks { get; set; }
         [Parameter] public string NavLinkDayClick { get; set; }
         [Parameter] public Action<DateTime, object> OnNavLinkDayClick { get; set; }
@@ -151,8 +140,6 @@ namespace FullCalendarBlazor
         [Parameter] public Action<DateClickInfo> OnDateClick { get; set; }
         [Parameter] public Action<SelectionInfo> OnSelect { get; set; }
         [Parameter] public Action<object, View> OnUnselect { get; set; } // Todo
-        // Todo: Calendar::select()
-        // Todo: Calendar::unselect()
         [Parameter] public bool? NowIndicator { get; set; }
         [Parameter] public DateTime? Now { get; set; }
         [Parameter] public Func<DateTime> OnGetNow { get; set; }
@@ -172,9 +159,6 @@ namespace FullCalendarBlazor
         [Parameter] public TimeSpan? DefaultAllDayEventDuration { get; set; }
         [Parameter] public TimeSpan? DefaultTimedEventDuration { get; set; }
         [Parameter] public bool? ForceEventDuration { get; set; }
-        // Todo: Calendar::getEvents() method
-        // Todo: Calendar::getEventsById() method
-        // Todo: Calendar::addEvent() method
         [Parameter] public Action<EventAddInfo> OnEventAdd { get; set; }
         [Parameter] public Action<EventChangeInfo> OnEventChange { get; set; }
         [Parameter] public Action<EventAddInfo> OnEventRemove { get; set; }
@@ -338,6 +322,49 @@ namespace FullCalendarBlazor
 
         #endregion
 
+        // Public methods
+
+        #region Overall Display
+
+        public async Task UpdateSizeAsync() => await JsInterop.ExecuteVoidMethodAsync(Id, "updateSize");
+
+        #endregion
+
+        #region Views
+
+        // public async Task<View> GetViewAsync() => await JsInterop.ExecuteMethodAsync<View>(Id, "view");
+        public async Task ChangeViewAsync(ViewOption viewOption) =>  await JsInterop.ExecuteVoidMethodAsync(Id, "changeView", viewOption);
+        public async Task ChangeViewAsync(ViewOption viewOption, DateTime date) =>  await JsInterop.ExecuteVoidMethodAsync(Id, "changeView", viewOption, date);
+
+        #endregion
+
+        #region Date and Time
+
+        public async Task SetScrollToTimeAsync(TimeSpan duration) => await JsInterop.ExecuteVoidMethodAsync(Id, "scrollToTime", duration);
+        public async Task GoToPrevAsync() => await JsInterop.ExecuteVoidMethodAsync(Id, "prev");
+        public async Task GoToNextAsync() => await JsInterop.ExecuteVoidMethodAsync(Id, "next");
+        public async Task GoToPrevYearAsync() => await JsInterop.ExecuteVoidMethodAsync(Id, "prevYear");
+        public async Task GoToNextYearAsync() => await JsInterop.ExecuteVoidMethodAsync(Id, "nextYear");
+        public async Task GoToTodayAsync() => await JsInterop.ExecuteVoidMethodAsync(Id, "today");
+        public async Task GoToDateAsync(DateTime date) => await JsInterop.ExecuteVoidMethodAsync(Id, "gotoDate", date);
+        public async Task IncrementDateAsync(TimeSpan duration) => await JsInterop.ExecuteVoidMethodAsync(Id, "incrementDate", duration);
+        public async Task<DateTime> GetDateAsync() => await JsInterop.ExecuteMethodAsync<DateTime>(Id, "getDate");
+        public async Task SelectPeriodAsync(DateTime start) => await JsInterop.ExecuteVoidMethodAsync(Id, "select", start);
+        public async Task SelectPeriodAsync(DateTime start, DateTime end) => await JsInterop.ExecuteVoidMethodAsync(Id, "select", start, end);
+        public async Task SelectPeriodAsync(SelectInfo selectInfo) => await JsInterop.ExecuteVoidMethodAsync(Id, "select", selectInfo); // Todo: All day prop
+
+        public async Task UnselectPeriodAsync() => await JsInterop.ExecuteVoidMethodAsync(Id, "unselect");
+
+        #endregion
+
+        #region Event
+
+        public async Task<IEnumerable<Event>> GetEvents() => await JsInterop.ExecuteMethodAsync<IEnumerable<Event>>(Id, "getEvents");
+        public async Task<Event> GetEventById(string id) => await JsInterop.ExecuteMethodAsync<Event>(Id, "getEventById", id);
+        public async Task<Event> AddEvent(Event newEvent) => await JsInterop.ExecuteMethodAsync<Event>(Id, "addEvent", newEvent); // Todo: sources
+
+        #endregion
+
         // Lifecycle methods
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -481,12 +508,13 @@ namespace FullCalendarBlazor
                 UseGetSelectOverlap = OnGetSelectOverlap != null,
                 UseGetSelectAllow = OnGetSelectAllow != null,
                 UseGetNow = OnGetNow != null,
+                UseEventDataTransform = OnEventDataTransform != null,
                 UseGetEventOrder = OnGetEventOrder != null,
                 UseEventOverlapMethod = OnEventOverlap != null,
                 UseDropAcceptMethod = OnDropAccept != null,
                 UseMoreLinkClickMethod = OnMoreLinkClick != null,
             };
-            await JsInterop.Render(Id, calendarData, DotNetObjectReference.Create(this));
+            await JsInterop.RenderAsync(Id, calendarData, DotNetObjectReference.Create(this));
         }
     }
 }
