@@ -71,7 +71,7 @@ namespace FullCalendarBlazor
         [Parameter] public DateRange VisibleRange { get; set; }
         [Parameter] public Func<DateTime, DateRange> OnGetVisibleRange { get; set; }
         // Todo: Add support for custom views
-        [Parameter] public ViewOption? InitialView { get; set; }
+        [Parameter] public string InitialView { get; set; }
         [Parameter] public Dictionary<string, object> Views { get; set; }
         // Todo: Add OnViewClassNames EventCallback
         [Parameter] public Action<View, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
@@ -333,8 +333,8 @@ namespace FullCalendarBlazor
         #region Views
 
         public async Task<View> GetViewAsync() => await JsInterop.GetPropertyAsync<View>(Id, "view");
-        public async Task ChangeViewAsync(ViewOption viewOption) =>  await JsInterop.ExecuteVoidMethodAsync(Id, "changeView", viewOption);
-        public async Task ChangeViewAsync(ViewOption viewOption, DateTime date) =>  await JsInterop.ExecuteVoidMethodAsync(Id, "changeView", viewOption, date);
+        public async Task ChangeViewAsync(string viewOption) =>  await JsInterop.ExecuteVoidMethodAsync(Id, "changeView", viewOption);
+        public async Task ChangeViewAsync(string viewOption, DateTime date) =>  await JsInterop.ExecuteVoidMethodAsync(Id, "changeView", viewOption, date);
 
         #endregion
 

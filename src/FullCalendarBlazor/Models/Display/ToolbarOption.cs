@@ -1,29 +1,24 @@
-﻿using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace FullCalendarBlazor.Models.Display
+﻿namespace FullCalendarBlazor.Models.Display
 {
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum ToolbarOption
+    public static class ToolbarOption
     {
-        [EnumMember(Value = " ")] Space,
-        [EnumMember(Value = "")] Empty,
-        [EnumMember(Value = ",")] Comma,
-        [EnumMember(Value = "title")] Title,
-        [EnumMember(Value = "prev")] Prev,
-        [EnumMember(Value = "next")] Next,
-        [EnumMember(Value = "prevYear")] PrevYear,
-        [EnumMember(Value = "nextYear")] NextYear,
-        [EnumMember(Value = "today")] Today,
-        [EnumMember(Value = "dayGridMonth")] DayGridMonth,
-        [EnumMember(Value = "dayGridWeek")] DayGridWeek,
-        [EnumMember(Value = "dayGridDay")] DayGridDay,
-        [EnumMember(Value = "timeGridWeek")] TimeGridWeek,
-        [EnumMember(Value = "timeGridDay")] TimeGridDay,
-        [EnumMember(Value = "listYear")] ListYear,
-        [EnumMember(Value = "listMonth")] ListMonth,
-        [EnumMember(Value = "listWeek")] ListWeek,
-        [EnumMember(Value = "listDay")] ListDay,
+        public static string Space => " ";
+        public static string Empty => "";
+        public static string Comma => ",";
+        public static string Title => "title";
+        public static string Prev => "prev";
+        public static string Next => "next";
+        public static string PrevYear => "prevYear";
+        public static string NextYear => "nextYear";
+        public static string Today => "today";
+        public static string DayGridMonth => "dayGridMonth";
+        public static string DayGridWeek => "dayGridWeek";
+        public static string DayGridDay => "dayGridDay";
+        public static string TimeGridWeek => "timeGridWeek";
+        public static string TimeGridDay => "timeGridDay";
+        public static string ListYear => "listYear";
+        public static string ListMonth => "listMonth";
+        public static string ListWeek => "listWeek";
+        public static string ListDay => "listDay";
     }
 }

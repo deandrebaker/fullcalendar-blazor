@@ -4,7 +4,7 @@ namespace FullCalendarBlazor.Models.Views
 {
     public class View
     {
-        public ViewOption? Type { get; set; }
+        public string Type { get; set; }
         public string Title { get; set; }
         public DateTime? ActiveStart { get; set; }
         public DateTime? ActiveEnd { get; set; }
