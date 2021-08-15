@@ -90,8 +90,8 @@ namespace FullCalendarBlazor
         [Parameter] public bool? OmitListDaySideFormat { get; set; }
         // Todo: Add OnNoEventsClassNames EventCallback
         // Todo: Add OnNoEventsContent EventCallback
-        [Parameter] public Action<NoEventsInfo> OnNoEventsDidMount { get; set; } // Todo: Replace object with proper type
-        [Parameter] public Action<NoEventsInfo> OnNoEventsWillUnmount { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<NoEventsInfo> OnNoEventsDidMount { get; set; }
+        [Parameter] public Action<NoEventsInfo> OnNoEventsWillUnmount { get; set; }
         [Parameter] public TimeSpan? Duration { get; set; }
         [Parameter] public int? DayCount { get; set; }
         [Parameter] public DateRange VisibleRange { get; set; }
@@ -99,8 +99,8 @@ namespace FullCalendarBlazor
         [Parameter] public string InitialView { get; set; }
         [Parameter] public Dictionary<string, object> Views { get; set; }
         // Todo: Add OnViewClassNames EventCallback
-        [Parameter] public Action<ViewInfo> OnViewDidMount { get; set; } // Todo: Replace object with proper type
-        [Parameter] public Action<ViewInfo> OnViewWillUnmount { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Action<ViewInfo> OnViewDidMount { get; set; }
+        [Parameter] public Action<ViewInfo> OnViewWillUnmount { get; set; }
 
         #endregion
 
@@ -164,7 +164,7 @@ namespace FullCalendarBlazor
         [Parameter] public int? SelectMinDistance { get; set; }
         [Parameter] public Action<DateClickInfo> OnDateClick { get; set; }
         [Parameter] public Action<SelectionInfo> OnSelect { get; set; }
-        [Parameter] public Action<object, View> OnUnselect { get; set; } // Todo
+        [Parameter] public Action<object, View> OnUnselect { get; set; } // Todo: Add proper type
         [Parameter] public bool? NowIndicator { get; set; }
         [Parameter] public DateTime? Now { get; set; }
         [Parameter] public Func<DateTime> OnGetNow { get; set; }
@@ -202,8 +202,8 @@ namespace FullCalendarBlazor
         [Parameter] public Func<Event, Event, int> OnGetEventOrder { get; set; }
         [Parameter] public bool? EventOrderStrict { get; set; }
         [Parameter] public bool? ProgressiveEventRendering { get; set; }
-        // [Parameter] public Func<EventRenderInfo, IEnumerable<string>> OnEventClassNames { get; set; } // Todo
-        // [Parameter] public Func<EventRenderInfo, object> OnEventContent { get; set; } // Todo: Replace object with proper type
+        // Todo: OnEventClassNames
+        // Todo: OnEventContent
         [Parameter] public Action<EventRenderInfo> OnEventDidMount { get; set; }
         [Parameter] public Action<EventRenderInfo> OnEventWillUnmount { get; set; }
         [Parameter] public Action<EventClickInfo> OnEventClick { get; set; }
@@ -244,8 +244,8 @@ namespace FullCalendarBlazor
         [Parameter] public string MoreLinkClick { get; set; }
         [Parameter] public Action<MoreLinkClickInfo> OnMoreLinkClick { get; set; }
         [Parameter] public DateTimeFormatter DayPopoverFormat { get; set; }
-        // [Parameter] public Func<int, string, IEnumerable<string>> OnMoreLinkClassNames { get; set; } // Todo
-        // [Parameter] public Func<int, string, object> OnMoreLinkContent { get; set; } // Todo: Replace object with proper type // Todo
+        // Todo: OnMoreLinkClassNames
+        // Todo: OnMoreLinkContent
         [Parameter] public Action<MoreLinkInfo> OnMoreLinkDidMount { get; set; }
         [Parameter] public Action<MoreLinkInfo> OnMoreLinkWillUnmount { get; set; }
 
@@ -289,8 +289,7 @@ namespace FullCalendarBlazor
         public async Task<DateTime> GetDateAsync() => await RuntimeService.ExecuteMethodAsync<DateTime>(Id, "getDate");
         public async Task SelectPeriodAsync(DateTime start) => await RuntimeService.ExecuteVoidMethodAsync(Id, "select", start);
         public async Task SelectPeriodAsync(DateTime start, DateTime end) => await RuntimeService.ExecuteVoidMethodAsync(Id, "select", start, end);
-        public async Task SelectPeriodAsync(SelectInfo selectInfo) => await RuntimeService.ExecuteVoidMethodAsync(Id, "select", selectInfo); // Todo: All day prop
-
+        public async Task SelectPeriodAsync(CalendarSelectInfo calendarSelectInfo) => await RuntimeService.ExecuteVoidMethodAsync(Id, "select", calendarSelectInfo);
         public async Task UnselectPeriodAsync() => await RuntimeService.ExecuteVoidMethodAsync(Id, "unselect");
 
         #endregion
@@ -299,7 +298,8 @@ namespace FullCalendarBlazor
 
         public async Task<IEnumerable<Event>> GetEvents() => await RuntimeService.ExecuteMethodAsync<IEnumerable<Event>>(Id, "getEvents");
         public async Task<Event> GetEventById(string id) => await RuntimeService.ExecuteMethodAsync<Event>(Id, "getEventById", id);
-        public async Task<Event> AddEvent(Event newEvent) => await RuntimeService.ExecuteMethodAsync<Event>(Id, "addEvent", newEvent); // Todo: sources
+        public async Task<Event> AddEvent(Event newEvent) => await RuntimeService.ExecuteMethodAsync<Event>(Id, "addEvent", newEvent);
+        public async Task<Event> AddEvent(Event newEvent, object source) => await RuntimeService.ExecuteMethodAsync<Event>(Id, "addEvent", newEvent, source); // Todo: Add proper type
         public async Task SetEventProp(Event selectedEvent, string name, object value) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setProp", name, value);
         public async Task SetEventExtendedProp(Event selectedEvent, string name, object value) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setExtendedProp", name, value);
         public async Task SetEventStart(Event selectedEvent, DateTime date) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setStart", date);
@@ -314,8 +314,8 @@ namespace FullCalendarBlazor
         public async Task MoveEventDates(Event selectedEvent, TimeSpan delta) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "moveDates");
         public async Task FormatEventRange(Event selectedEvent, DateTimeFormatter formatConfig) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "formatRange", formatConfig);
         public async Task RemoveEvent(Event selectedEvent) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "remove");
-        public async Task<IEnumerable<object>> GetEventResources(Event selectedEvent) => await RuntimeService.ExecuteEventMethodAsync<IEnumerable<object>>(Id, selectedEvent.Id, "getResources"); // todo
-        public async Task SetEventResources(Event selectedEvent, IEnumerable<object> resources) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setResources", resources); // todo
+        public async Task<IEnumerable<object>> GetEventResources(Event selectedEvent) => await RuntimeService.ExecuteEventMethodAsync<IEnumerable<object>>(Id, selectedEvent.Id, "getResources"); // Todo: Add proper type
+        public async Task SetEventResources(Event selectedEvent, IEnumerable<object> resources) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setResources", resources); // Todo: Add proper type
         public async Task EventToPlainObject(Event selectedEvent, bool collapseExtendedProps, bool collapseColor) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "toPlainObject", new { collapseExtendedProps, collapseColor });
 
         #endregion
