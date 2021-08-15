@@ -92,77 +92,77 @@ namespace FullCalendarBlazor.Services
 
         #region Overall Display
 
-        [JSInvokable] public void _WindowResize(WindowResizeInfo windowResizeInfo) => OnWindowResize?.Invoke(windowResizeInfo);
+        [JSInvokable] public void WindowResize(WindowResizeInfo windowResizeInfo) => OnWindowResize?.Invoke(windowResizeInfo);
 
         #endregion
 
         #region Views
 
-        [JSInvokable] public void _AllDayDidMount(AllDayInfo allDayInfo) => OnAllDayDidMount?.Invoke(allDayInfo);
-        [JSInvokable] public void _AllDayWillUnmount(AllDayInfo allDayInfo) => OnAllDayWillUnmount?.Invoke(allDayInfo);
-        [JSInvokable] public void _NoEventsDidMount(NoEventsInfo noEventsInfo) => OnNoEventsDidMount?.Invoke(noEventsInfo);
-        [JSInvokable] public void _NoEventsWillUnmount(NoEventsInfo noEventsInfo) => OnNoEventsWillUnmount?.Invoke(noEventsInfo);
-        [JSInvokable] public DateRange _GetVisibleRange(DateTime currentDate) => OnGetVisibleRange?.Invoke(currentDate);
-        [JSInvokable] public void _ViewDidMount(ViewInfo viewInfo) => OnViewDidMount?.Invoke(viewInfo);
-        [JSInvokable] public void _ViewWillUnmount(ViewInfo viewInfo) => OnViewWillUnmount?.Invoke(viewInfo);
+        [JSInvokable] public void AllDayDidMount(AllDayInfo allDayInfo) => OnAllDayDidMount?.Invoke(allDayInfo);
+        [JSInvokable] public void AllDayWillUnmount(AllDayInfo allDayInfo) => OnAllDayWillUnmount?.Invoke(allDayInfo);
+        [JSInvokable] public void NoEventsDidMount(NoEventsInfo noEventsInfo) => OnNoEventsDidMount?.Invoke(noEventsInfo);
+        [JSInvokable] public void NoEventsWillUnmount(NoEventsInfo noEventsInfo) => OnNoEventsWillUnmount?.Invoke(noEventsInfo);
+        [JSInvokable] public DateRange GetVisibleRange(DateTime currentDate) => OnGetVisibleRange?.Invoke(currentDate);
+        [JSInvokable] public void ViewDidMount(ViewInfo viewInfo) => OnViewDidMount?.Invoke(viewInfo);
+        [JSInvokable] public void ViewWillUnmount(ViewInfo viewInfo) => OnViewWillUnmount?.Invoke(viewInfo);
 
         #endregion Views
 
         #region Date and Time
 
-        [JSInvokable] public void _DayHeaderDidMount(DayHeaderRenderInfo dayHeaderRenderInfo) => OnDayHeaderDidMount?.Invoke(dayHeaderRenderInfo);
-        [JSInvokable] public void _DayHeaderWillUnmount(DayHeaderRenderInfo dayHeaderRenderInfo) => OnDayHeaderWillUnmount?.Invoke(dayHeaderRenderInfo);
-        [JSInvokable] public void _DayCellDidMount(DayCellRenderInfo dayCellRenderInfo) => OnDayCellDidMount?.Invoke(dayCellRenderInfo);
-        [JSInvokable] public void _DayCellWillUnmount(DayCellRenderInfo dayCellRenderInfo) => OnDayCellWillUnmount?.Invoke(dayCellRenderInfo);
-        [JSInvokable] public void _SlotLabelDidMount(SlotRenderInfo slotRenderInfo) => OnSlotLabelDidMount?.Invoke(slotRenderInfo);
-        [JSInvokable] public void _SlotLabelWillUnmount(SlotRenderInfo slotRenderInfo) => OnSlotLabelWillUnmount?.Invoke(slotRenderInfo);
-        [JSInvokable] public void _SlotLaneDidMount(SlotRenderInfo slotRenderInfo) => OnSlotLaneDidMount?.Invoke(slotRenderInfo);
-        [JSInvokable] public void _SlotLaneWillUnmount(SlotRenderInfo slotRenderInfo) => OnSlotLaneWillUnmount?.Invoke(slotRenderInfo);
-        [JSInvokable] public void _DatesSet(DateInfo dateInfo) => OnDatesSet?.Invoke(dateInfo);
-        [JSInvokable] public void _NavLinkDayClick(DateTime date, object jsEvent) => OnNavLinkDayClick?.Invoke(date, jsEvent);
-        [JSInvokable] public void _NavLinkWeekClick(DateTime weekStart, object jsEvent) => OnNavLinkWeekClick?.Invoke(weekStart, jsEvent);
-        [JSInvokable] public int? _GetWeekNumber(DateTime date) => OnGetWeekNumber?.Invoke(date);
-        [JSInvokable] public void _WeekNumberDidMount(WeekNumberInfo weekNumberInfo) => OnWeekNumberDidMount?.Invoke(weekNumberInfo);
-        [JSInvokable] public void _WeekNumberWillUnmount(WeekNumberInfo weekNumberInfo) => OnWeekNumberWillUnmount?.Invoke(weekNumberInfo);
-        [JSInvokable] public bool? _GetSelectOverlap(Event overlappedEvent) => OnGetSelectOverlap?.Invoke(overlappedEvent);
-        [JSInvokable] public bool? _GetSelectAllow(SelectInfo selectInfo) => OnGetSelectAllow?.Invoke(selectInfo);
-        [JSInvokable] public void _DateClick(DateClickInfo dateClickInfo) => OnDateClick?.Invoke(dateClickInfo);
-        [JSInvokable] public void _Select(SelectionInfo selectionInfo) => OnSelect?.Invoke(selectionInfo);
-        [JSInvokable] public void _Unselect(object jsEvent, View view) => OnUnselect?.Invoke(jsEvent, view);
-        [JSInvokable] public DateTime? _GetNow() => OnGetNow?.Invoke();
-        [JSInvokable] public void _NowIndicatorDidMount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorDidMount?.Invoke(nowIndicatorInfo);
-        [JSInvokable] public void _NowIndicatorWillUnmount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorWillUnmount?.Invoke(nowIndicatorInfo);
+        [JSInvokable] public void DayHeaderDidMount(DayHeaderRenderInfo dayHeaderRenderInfo) => OnDayHeaderDidMount?.Invoke(dayHeaderRenderInfo);
+        [JSInvokable] public void DayHeaderWillUnmount(DayHeaderRenderInfo dayHeaderRenderInfo) => OnDayHeaderWillUnmount?.Invoke(dayHeaderRenderInfo);
+        [JSInvokable] public void DayCellDidMount(DayCellRenderInfo dayCellRenderInfo) => OnDayCellDidMount?.Invoke(dayCellRenderInfo);
+        [JSInvokable] public void DayCellWillUnmount(DayCellRenderInfo dayCellRenderInfo) => OnDayCellWillUnmount?.Invoke(dayCellRenderInfo);
+        [JSInvokable] public void SlotLabelDidMount(SlotRenderInfo slotRenderInfo) => OnSlotLabelDidMount?.Invoke(slotRenderInfo);
+        [JSInvokable] public void SlotLabelWillUnmount(SlotRenderInfo slotRenderInfo) => OnSlotLabelWillUnmount?.Invoke(slotRenderInfo);
+        [JSInvokable] public void SlotLaneDidMount(SlotRenderInfo slotRenderInfo) => OnSlotLaneDidMount?.Invoke(slotRenderInfo);
+        [JSInvokable] public void SlotLaneWillUnmount(SlotRenderInfo slotRenderInfo) => OnSlotLaneWillUnmount?.Invoke(slotRenderInfo);
+        [JSInvokable] public void DatesSet(DateInfo dateInfo) => OnDatesSet?.Invoke(dateInfo);
+        [JSInvokable] public void NavLinkDayClick(DateTime date, object jsEvent) => OnNavLinkDayClick?.Invoke(date, jsEvent);
+        [JSInvokable] public void NavLinkWeekClick(DateTime weekStart, object jsEvent) => OnNavLinkWeekClick?.Invoke(weekStart, jsEvent);
+        [JSInvokable] public int? GetWeekNumber(DateTime date) => OnGetWeekNumber?.Invoke(date);
+        [JSInvokable] public void WeekNumberDidMount(WeekNumberInfo weekNumberInfo) => OnWeekNumberDidMount?.Invoke(weekNumberInfo);
+        [JSInvokable] public void WeekNumberWillUnmount(WeekNumberInfo weekNumberInfo) => OnWeekNumberWillUnmount?.Invoke(weekNumberInfo);
+        [JSInvokable] public bool? GetSelectOverlap(Event overlappedEvent) => OnGetSelectOverlap?.Invoke(overlappedEvent);
+        [JSInvokable] public bool? GetSelectAllow(SelectInfo selectInfo) => OnGetSelectAllow?.Invoke(selectInfo);
+        [JSInvokable] public void DateClick(DateClickInfo dateClickInfo) => OnDateClick?.Invoke(dateClickInfo);
+        [JSInvokable] public void Select(SelectionInfo selectionInfo) => OnSelect?.Invoke(selectionInfo);
+        [JSInvokable] public void Unselect(object jsEvent, View view) => OnUnselect?.Invoke(jsEvent, view);
+        [JSInvokable] public DateTime? GetNow() => OnGetNow?.Invoke();
+        [JSInvokable] public void NowIndicatorDidMount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorDidMount?.Invoke(nowIndicatorInfo);
+        [JSInvokable] public void NowIndicatorWillUnmount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorWillUnmount?.Invoke(nowIndicatorInfo);
 
         #endregion
 
         #region Event
 
-        [JSInvokable] public object _GetEventDataTransform(object eventData) => (object) OnGetEventDataTransform?.Invoke(eventData) ?? false;
-        [JSInvokable] public void _EventAdd(EventAddInfo eventAddInfo) => OnEventAdd?.Invoke(eventAddInfo);
-        [JSInvokable] public void _EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
-        [JSInvokable] public void _EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
-        [JSInvokable] public void _EventsSet(IEnumerable<Event> events) => OnEventsSet?.Invoke(events);
-        [JSInvokable] public int? _GetEventOrder(Event eventA, Event eventB) => OnGetEventOrder?.Invoke(eventA, eventB);
-        [JSInvokable] public void _EventDidMount(EventRenderInfo eventRenderInfo) => OnEventDidMount?.Invoke(eventRenderInfo);
-        [JSInvokable] public void _EventWillUnmount(EventRenderInfo eventRenderInfo) => OnEventWillUnmount?.Invoke(eventRenderInfo);
-        [JSInvokable] public void _EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
-        [JSInvokable] public void _EventMouseEnter(EventClickInfo mouseEnterInfo) => OnEventMouseEnter?.Invoke(mouseEnterInfo);
-        [JSInvokable] public void _EventMouseLeave(EventClickInfo mouseLeaveInfo) => OnEventMouseLeave?.Invoke(mouseLeaveInfo);
-        [JSInvokable] public bool _GetEventOverlap(Event stillEvent, Event movingEvent) => OnGetEventOverlap?.Invoke(stillEvent, movingEvent) ?? true;
-        [JSInvokable] public bool _GetEventAllow(EventAllowInfo eventAllowInfo, Event draggedEvent) => OnGetEventAllow?.Invoke(eventAllowInfo, draggedEvent) ?? true;
-        [JSInvokable] public bool _GetDropAccept(object draggableItem) => OnGetDropAccept?.Invoke(draggableItem) ?? true; // Todo: Replace object with DraggableItem type.
-        [JSInvokable] public void _EventDragStart(EventDragInfo eventDragInfo) => OnEventDragStart?.Invoke(eventDragInfo);
-        [JSInvokable] public void _EventDragStop(EventDragInfo eventDragInfo) => OnEventDragStop?.Invoke(eventDragInfo);
-        [JSInvokable] public void _EventDrop(EventDropInfo eventDropInfo) => OnEventDrop?.Invoke(eventDropInfo);
-        [JSInvokable] public void _Drop(DropInfo dropInfo) => OnDrop?.Invoke(dropInfo);
-        [JSInvokable] public void _EventReceive(ExternalEventDropInfo eventReceiveInfo) => OnEventReceive?.Invoke(eventReceiveInfo);
-        [JSInvokable] public void _EventLeave(ExternalEventDropInfo eventLeaveInfo) => OnEventLeave?.Invoke(eventLeaveInfo);
-        [JSInvokable] public void _EventResizeStart(EventDragInfo eventResizeInfo) => OnEventResizeStart?.Invoke(eventResizeInfo);
-        [JSInvokable] public void _EventResizeStop(EventDragInfo eventResizeInfo) => OnEventResizeStop?.Invoke(eventResizeInfo);
-        [JSInvokable] public void _EventResize(EventResizeInfo eventResizeInfo) => OnEventResize?.Invoke(eventResizeInfo);
-        [JSInvokable] public void _MoreLinkClick(MoreLinkClickInfo info) => OnMoreLinkClick?.Invoke(info);
-        [JSInvokable] public void _MoreLinkDidMount(MoreLinkInfo moreLinkInfo) => OnMoreLinkDidMount?.Invoke(moreLinkInfo);
-        [JSInvokable] public void _MoreLinkWillUnmount(MoreLinkInfo moreLinkInfo) => OnMoreLinkWillUnmount?.Invoke(moreLinkInfo);
+        [JSInvokable] public object GetEventDataTransform(object eventData) => (object) OnGetEventDataTransform?.Invoke(eventData) ?? false;
+        [JSInvokable] public void EventAdd(EventAddInfo eventAddInfo) => OnEventAdd?.Invoke(eventAddInfo);
+        [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
+        [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
+        [JSInvokable] public void EventsSet(IEnumerable<Event> events) => OnEventsSet?.Invoke(events);
+        [JSInvokable] public int? GetEventOrder(Event eventA, Event eventB) => OnGetEventOrder?.Invoke(eventA, eventB);
+        [JSInvokable] public void EventDidMount(EventRenderInfo eventRenderInfo) => OnEventDidMount?.Invoke(eventRenderInfo);
+        [JSInvokable] public void EventWillUnmount(EventRenderInfo eventRenderInfo) => OnEventWillUnmount?.Invoke(eventRenderInfo);
+        [JSInvokable] public void EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
+        [JSInvokable] public void EventMouseEnter(EventClickInfo mouseEnterInfo) => OnEventMouseEnter?.Invoke(mouseEnterInfo);
+        [JSInvokable] public void EventMouseLeave(EventClickInfo mouseLeaveInfo) => OnEventMouseLeave?.Invoke(mouseLeaveInfo);
+        [JSInvokable] public bool GetEventOverlap(Event stillEvent, Event movingEvent) => OnGetEventOverlap?.Invoke(stillEvent, movingEvent) ?? true;
+        [JSInvokable] public bool GetEventAllow(EventAllowInfo eventAllowInfo, Event draggedEvent) => OnGetEventAllow?.Invoke(eventAllowInfo, draggedEvent) ?? true;
+        [JSInvokable] public bool GetDropAccept(object draggableItem) => OnGetDropAccept?.Invoke(draggableItem) ?? true; // Todo: Replace object with DraggableItem type.
+        [JSInvokable] public void EventDragStart(EventDragInfo eventDragInfo) => OnEventDragStart?.Invoke(eventDragInfo);
+        [JSInvokable] public void EventDragStop(EventDragInfo eventDragInfo) => OnEventDragStop?.Invoke(eventDragInfo);
+        [JSInvokable] public void EventDrop(EventDropInfo eventDropInfo) => OnEventDrop?.Invoke(eventDropInfo);
+        [JSInvokable] public void Drop(DropInfo dropInfo) => OnDrop?.Invoke(dropInfo);
+        [JSInvokable] public void EventReceive(ExternalEventDropInfo eventReceiveInfo) => OnEventReceive?.Invoke(eventReceiveInfo);
+        [JSInvokable] public void EventLeave(ExternalEventDropInfo eventLeaveInfo) => OnEventLeave?.Invoke(eventLeaveInfo);
+        [JSInvokable] public void EventResizeStart(EventDragInfo eventResizeInfo) => OnEventResizeStart?.Invoke(eventResizeInfo);
+        [JSInvokable] public void EventResizeStop(EventDragInfo eventResizeInfo) => OnEventResizeStop?.Invoke(eventResizeInfo);
+        [JSInvokable] public void EventResize(EventResizeInfo eventResizeInfo) => OnEventResize?.Invoke(eventResizeInfo);
+        [JSInvokable] public void MoreLinkClick(MoreLinkClickInfo info) => OnMoreLinkClick?.Invoke(info);
+        [JSInvokable] public void MoreLinkDidMount(MoreLinkInfo moreLinkInfo) => OnMoreLinkDidMount?.Invoke(moreLinkInfo);
+        [JSInvokable] public void MoreLinkWillUnmount(MoreLinkInfo moreLinkInfo) => OnMoreLinkWillUnmount?.Invoke(moreLinkInfo);
 
         #endregion
     }

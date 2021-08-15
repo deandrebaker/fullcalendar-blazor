@@ -29,10 +29,10 @@ namespace FullCalendarBlazor
             foreach (var property in GetType().GetProperties())
             {
                 if (property.Name.StartsWith("OnGet"))
-                    _calendarMethods.Add(property, ($"{property.Name.Substring(5, 1).ToLower()}{property.Name.Substring(6)}", $"_{property.Name.Substring(2)}"));
+                    _calendarMethods.Add(property, ($"{property.Name.Substring(5, 1).ToLower()}{property.Name.Substring(6)}", property.Name.Substring(2)));
 
                 else if (property.Name.StartsWith("On"))
-                    _calendarMethods.Add(property, ($"{property.Name.Substring(2, 1).ToLower()}{property.Name.Substring(3)}", $"_{property.Name.Substring(2)}"));
+                    _calendarMethods.Add(property, ($"{property.Name.Substring(2, 1).ToLower()}{property.Name.Substring(3)}", property.Name.Substring(2)));
 
                 else
                     _calendarProperties.Add(property, $"{property.Name.Substring(0, 1).ToLower()}{property.Name.Substring(1)}");
