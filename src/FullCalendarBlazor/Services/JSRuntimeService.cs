@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
@@ -16,7 +17,7 @@ namespace FullCalendarBlazor.Services
                 "import", "./_content/FullCalendarBlazor/fullCalendarJsInterop.js").AsTask());
         }
 
-        public async ValueTask RenderAsync(object calendarData, object calendarMethodData, DotNetObjectReference<FullCalendar> objRef)
+        public async ValueTask RenderAsync(object calendarData, IEnumerable<(string, string)> calendarMethods, DotNetObjectReference<FullCalendar> objRef)
         {
             var settings = new JsonSerializerSettings
             {
@@ -27,9 +28,9 @@ namespace FullCalendarBlazor.Services
                 NullValueHandling = NullValueHandling.Ignore
             };
             var serializedData = JsonConvert.SerializeObject(calendarData, Formatting.Indented, settings);
-            var serializedMethodData = JsonConvert.SerializeObject(calendarMethodData, Formatting.Indented, settings);
+            var serializedMethods = JsonConvert.SerializeObject(calendarMethods, Formatting.Indented, settings);
             var module = await _moduleTask.Value;
-            await module.InvokeVoidAsync("render", serializedData, serializedMethodData, objRef);
+            await module.InvokeVoidAsync("render", serializedData, serializedMethods, objRef);
         }
 
         public async ValueTask ExecuteVoidMethodAsync(string elementId, string methodName, params object[] args)

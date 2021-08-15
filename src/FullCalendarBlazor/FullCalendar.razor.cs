@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using FullCalendarBlazor.Models.DateAndTime;
 using FullCalendarBlazor.Models.Display;
@@ -15,6 +18,27 @@ namespace FullCalendarBlazor
 {
     public partial class FullCalendar
     {
+        private readonly Dictionary<PropertyInfo, string> _calendarProperties;
+        private readonly Dictionary<PropertyInfo, (string jsName, string dotnetName)> _calendarMethods;
+
+        public FullCalendar()
+        {
+            _calendarProperties = new Dictionary<PropertyInfo, string>();
+            _calendarMethods = new Dictionary<PropertyInfo, (string, string)>();
+
+            foreach (var property in GetType().GetProperties())
+            {
+                if (property.Name.StartsWith("OnGet"))
+                    _calendarMethods.Add(property, ($"{property.Name.Substring(5, 1).ToLower()}{property.Name.Substring(6)}", $"_{property.Name.Substring(2)}"));
+
+                else if (property.Name.StartsWith("On"))
+                    _calendarMethods.Add(property, ($"{property.Name.Substring(2, 1).ToLower()}{property.Name.Substring(3)}", $"_{property.Name.Substring(2)}"));
+
+                else
+                    _calendarProperties.Add(property, $"{property.Name.Substring(0, 1).ToLower()}{property.Name.Substring(1)}");
+            }
+        }
+
         // Injected Dependencies
         [Inject] private IJSRuntimeService JsInterop { get; set; }
 
@@ -360,26 +384,23 @@ namespace FullCalendarBlazor
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             var calendarData = new ExpandoObject() as IDictionary<string, object>;
-            var calendarMethodData = new ExpandoObject() as IDictionary<string, object>;
-            foreach (var property in GetType().GetProperties())
+            var calendarMethods = new List<(string, string)>();
+
+            foreach (var (property, jsName) in _calendarProperties)
             {
-                if (property.GetValue(this) != null)
-                {
-                    if (property.Name.StartsWith("OnGet"))
-                    {
-                        calendarMethodData.Add($"{property.Name.Substring(5, 1).ToLower()}{property.Name.Substring(6)}", $"_{property.Name.Substring(2)}");
-                    }
-                    else if (property.Name.StartsWith("On"))
-                    {
-                        calendarMethodData.Add($"{property.Name.Substring(2, 1).ToLower()}{property.Name.Substring(3)}", $"_{property.Name.Substring(2)}");
-                    }
-                    else
-                    {
-                        calendarData.Add($"{property.Name.Substring(0, 1).ToLower()}{property.Name.Substring(1)}", property.GetValue(this));
-                    }
-                }
+                var value = property.GetValue(this);
+                if (value != null)
+                    calendarData.Add(jsName, value);
             }
-            await JsInterop.RenderAsync(calendarData, calendarMethodData, DotNetObjectReference.Create(this));
+
+            foreach (var (property, (jsName, dotnetName)) in _calendarMethods)
+            {
+                var value = property.GetValue(this);
+                if (value != null)
+                    calendarMethods.Add((jsName, dotnetName));
+            }
+
+            await JsInterop.RenderAsync(calendarData, calendarMethods, DotNetObjectReference.Create(this));
         }
     }
 }

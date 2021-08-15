@@ -4,9 +4,9 @@
 
 const calendars = {};
 
-export function render(serializedData, serializedMethodData, objRef) {
+export function render(serializedData, serializedMethods, objRef) {
     const { id, ...calendarData} = JSON.parse(serializedData);
-    const calendarMethodData = JSON.parse(serializedMethodData);
+    const calendarMethods = JSON.parse(serializedMethods);
 
     // Transform Calendar Properties
 
@@ -40,9 +40,7 @@ export function render(serializedData, serializedMethodData, objRef) {
             delete calendarData[propName]?.omitMeridiem;
         });
 
-    Object.getOwnPropertyNames(calendarMethodData).forEach(propName => 
-        calendarData[propName] = (...args) => objRef.invokeMethod(calendarMethodData[propName], ...args) 
-    )
+    calendarMethods.forEach(({item1: jsName, item2: dotnetName}) => calendarData[jsName] = (...args) => objRef.invokeMethod(dotnetName, ...args));
 
     const calendarElement = document.getElementById(id);
     calendars[id] = new FullCalendar.Calendar(calendarElement, calendarData);
