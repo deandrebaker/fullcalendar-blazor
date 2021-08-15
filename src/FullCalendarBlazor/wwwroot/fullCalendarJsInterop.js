@@ -47,8 +47,14 @@ export function render(serializedData, serializedMethods, objRef) {
     calendars[id].render();
 }
 
-export function executeMethod(elementId, methodName, args) {
+export function executeMethod(elementId, methodName, serializedArgs) {
+    const args = JSON.parse(serializedArgs);
     return calendars[elementId][methodName](...args);
+}
+
+export function executeEventMethod(elementId, eventId, methodName, serializedArgs) {
+    const args = JSON.parse(serializedArgs)
+    return calendars[elementId].getEventById(eventId)[methodName](...args);
 }
 
 export function getProperty(elementId, propName) {
