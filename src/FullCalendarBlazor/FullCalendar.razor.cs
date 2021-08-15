@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
-using FullCalendarBlazor.Models;
 using FullCalendarBlazor.Models.DateAndTime;
 using FullCalendarBlazor.Models.Display;
 using FullCalendarBlazor.Models.Events;
+using FullCalendarBlazor.Models.International;
 using FullCalendarBlazor.Models.Views;
 using FullCalendarBlazor.Services;
 using Microsoft.AspNetCore.Components;
@@ -16,8 +18,30 @@ namespace FullCalendarBlazor
 {
     public partial class FullCalendar
     {
+        private readonly Dictionary<PropertyInfo, string> _calendarProperties;
+        private readonly Dictionary<PropertyInfo, (string jsName, string dotnetName)> _calendarMethods;
+
+        public FullCalendar()
+        {
+            _calendarProperties = new Dictionary<PropertyInfo, string>();
+            _calendarMethods = new Dictionary<PropertyInfo, (string, string)>();
+
+            foreach (var property in GetType().GetProperties())
+            {
+                if (property.Name.StartsWith("OnGet"))
+                    _calendarMethods.Add(property, ($"{property.Name.Substring(5, 1).ToLower()}{property.Name.Substring(6)}", property.Name.Substring(2)));
+
+                else if (property.Name.StartsWith("On"))
+                    _calendarMethods.Add(property, ($"{property.Name.Substring(2, 1).ToLower()}{property.Name.Substring(3)}", property.Name.Substring(2)));
+
+                else
+                    _calendarProperties.Add(property, $"{property.Name.Substring(0, 1).ToLower()}{property.Name.Substring(1)}");
+            }
+        }
+
         // Injected Dependencies
-        [Inject] private IJSRuntimeService JsInterop { get; set; }
+        [Inject] private IJSRuntimeService RuntimeService { get; set; }
+        [Inject] private IJSInvokableService InvokableService { get; set; }
 
         // Parameters
 
@@ -26,22 +50,25 @@ namespace FullCalendarBlazor
         #region Overall Display
 
         [Parameter] public Toolbar HeaderToolbar { get; set; }
+        [Parameter] public bool? OmitHeaderToolbar { get; set; }
         [Parameter] public Toolbar FooterToolbar { get; set; }
+        [Parameter] public bool? OmitFooterToolbar { get; set; }
         [Parameter] public DateTimeFormatter TitleFormat { get; set; }
         [Parameter] public string TitleRangeSeparator { get; set; }
         [Parameter] public Dictionary<string, string> ButtonText { get; set; }
         [Parameter] public Dictionary<string, string> ButtonIcons { get; set; }
-        [Parameter] public object CustomButtons { get; set; }
-        [Parameter] public string ThemeSystem { get; set; }
+        [Parameter] public Dictionary<string, CustomButton> CustomButtons { get; set; }
+        [Parameter] public ThemeSystemOption? ThemeSystem { get; set; }
+        // Todo: Add configuration for Bootstrap theming
         [Parameter] public string Height { get; set; }
         [Parameter] public string ContentHeight { get; set; }
         [Parameter] public double? AspectRatio { get; set; }
         [Parameter] public bool? ExpandRows { get; set; }
         [Parameter] public bool? HandleWindowResize { get; set; }
         [Parameter] public int? WindowResizeDelay { get; set; }
-        [Parameter] public string StickyHeaderDates { get; set; }
-        [Parameter] public string StickyFooterScrollbar { get; set; }
-        [Parameter] public Action<View> OnWindowResize { get; set; }
+        [Parameter] public bool? StickyHeaderDates { get; set; }
+        [Parameter] public bool? StickyFooterScrollbar { get; set; }
+        [Parameter] public Action<WindowResizeInfo> OnWindowResize { get; set; }
 
         #endregion
 
@@ -53,20 +80,27 @@ namespace FullCalendarBlazor
         [Parameter] public int? EventShortHeight { get; set; }
         [Parameter] public bool? SlotEventOverlap { get; set; }
         [Parameter] public bool? AllDaySlot { get; set; }
-        // [Parameter] public Func<string, IEnumerable<string>> OnAllDayClassNames { get; set; } // Todo
-        // [Parameter] public Func<string, object> OnAllDayContent { get; set; } // Todo: Replace object with proper type
-        [Parameter] public Action<string> OnAllDayDidMount { get; set; }
-        [Parameter] public Action<string> OnAllDayWillUnmount { get; set; }
+        // Todo: Add OnAllDayClassNames EventCallback
+        // Todo: Add OnAllDayContent EventCallback
+        [Parameter] public Action<AllDayInfo> OnAllDayDidMount { get; set; }
+        [Parameter] public Action<AllDayInfo> OnAllDayWillUnmount { get; set; }
         [Parameter] public DateTimeFormatter ListDayFormat { get; set; }
+        [Parameter] public bool? OmitListDayFormat { get; set; }
         [Parameter] public DateTimeFormatter ListDaySideFormat { get; set; }
-        // [Parameter] public Func<object, IEnumerable<string>> OnNoEventsClassNames { get; set; } // Todo
-        // [Parameter] public Func<object, object> OnNoEventsContent { get; set; } // Todo: Replace object with proper type
-        [Parameter] public Action<object> OnNoEventsDidMount { get; set; } // Todo: Replace object with proper type
-        [Parameter] public Action<object> OnNoEventsWillUnmount { get; set; } // Todo: Replace object with proper type
+        [Parameter] public bool? OmitListDaySideFormat { get; set; }
+        // Todo: Add OnNoEventsClassNames EventCallback
+        // Todo: Add OnNoEventsContent EventCallback
+        [Parameter] public Action<NoEventsInfo> OnNoEventsDidMount { get; set; }
+        [Parameter] public Action<NoEventsInfo> OnNoEventsWillUnmount { get; set; }
+        [Parameter] public TimeSpan? Duration { get; set; }
+        [Parameter] public int? DayCount { get; set; }
+        [Parameter] public DateRange VisibleRange { get; set; }
+        [Parameter] public Func<DateTime, DateRange> OnGetVisibleRange { get; set; }
         [Parameter] public string InitialView { get; set; }
-        // [Parameter] public Func<object, IEnumerable<string>> OnViewClassNames { get; set; } // Todo
-        [Parameter] public Action<View, object> OnViewDidMount { get; set; } // Todo: Replace object with proper type
-        [Parameter] public Action<View, object> OnViewWillUnmount { get; set; } // Todo: Replace object with proper type
+        [Parameter] public Dictionary<string, object> Views { get; set; }
+        // Todo: Add OnViewClassNames EventCallback
+        [Parameter] public Action<ViewInfo> OnViewDidMount { get; set; }
+        [Parameter] public Action<ViewInfo> OnViewWillUnmount { get; set; }
 
         #endregion
 
@@ -103,29 +137,37 @@ namespace FullCalendarBlazor
         [Parameter] public Action<DateInfo> OnDatesSet { get; set; }
         [Parameter] public DateTime? InitialDate { get; set; }
         [Parameter] public TimeSpan? DateIncrement { get; set; }
-        [Parameter] public string DateAlignment { get; set; }
+        [Parameter] public DateAlignmentOption? DateAlignment { get; set; }
         [Parameter] public DateRange ValidRange { get; set; }
         [Parameter] public bool? NavLinks { get; set; }
         [Parameter] public string NavLinkDayClick { get; set; }
+        [Parameter] public Action<DateTime, object> OnNavLinkDayClick { get; set; }
         [Parameter] public string NavLinkWeekClick { get; set; }
+        [Parameter] public Action<DateTime, object> OnNavLinkWeekClick { get; set; }
         [Parameter] public bool? WeekNumbers { get; set; }
-        [Parameter] public string WeekNumberCalculation { get; set; }
+        [Parameter] public WeekNumberOption? WeekNumberCalculation { get; set; }
+        [Parameter] public Func<DateTime, int> OnGetWeekNumber { get; set; }
         [Parameter] public string WeekText { get; set; }
         [Parameter] public DateTimeFormatter WeekNumberFormat { get; set; }
         // Todo: OnWeekNumberClassNames
         // Todo: OnWeekNumberContent
-        [Parameter] public Action<string, string, DateTime> OnWeekNumberDidMount { get; set; }
-        [Parameter] public Action<string, string, DateTime> OnWeekNumberWillUnmount { get; set; }
+        [Parameter] public Action<WeekNumberInfo> OnWeekNumberDidMount { get; set; }
+        [Parameter] public Action<WeekNumberInfo> OnWeekNumberWillUnmount { get; set; }
         [Parameter] public bool? Selectable { get; set; }
         [Parameter] public bool? SelectMirror { get; set; }
         [Parameter] public bool? UnselectAuto { get; set; }
         [Parameter] public string UnselectCancel { get; set; }
         [Parameter] public bool? SelectOverlap { get; set; }
+        [Parameter] public Func<Event, bool> OnGetSelectOverlap { get; set; }
         [Parameter] public object SelectConstraint { get; set; }
-        [Parameter] public Func<SelectInfo, bool> OnSelectAllow { get; set; }
+        [Parameter] public Func<SelectInfo, bool> OnGetSelectAllow { get; set; }
         [Parameter] public int? SelectMinDistance { get; set; }
+        [Parameter] public Action<DateClickInfo> OnDateClick { get; set; }
+        [Parameter] public Action<SelectionInfo> OnSelect { get; set; }
+        [Parameter] public Action<object, View> OnUnselect { get; set; } // Todo: Add proper type
         [Parameter] public bool? NowIndicator { get; set; }
         [Parameter] public DateTime? Now { get; set; }
+        [Parameter] public Func<DateTime> OnGetNow { get; set; }
         // Todo: OnNowIndicatorClassNames
         // Todo: OnNowIndicatorContent
         [Parameter] public Action<NowIndicatorInfo> OnNowIndicatorDidMount { get; set; }
@@ -137,7 +179,7 @@ namespace FullCalendarBlazor
         #region Events
 
         [Parameter] public IEnumerable<Event> Events { get; set; }
-        // Todo: Add EventDataTransform delegate for transforming events from a source (https://fullcalendar.io/docs/eventDataTransform)
+        [Parameter] public Func<object, Event> OnGetEventDataTransform { get; set; }
         [Parameter] public bool? DefaultAllDay { get; set; }
         [Parameter] public TimeSpan? DefaultAllDayEventDuration { get; set; }
         [Parameter] public TimeSpan? DefaultTimedEventDuration { get; set; }
@@ -146,41 +188,45 @@ namespace FullCalendarBlazor
         [Parameter] public Action<EventChangeInfo> OnEventChange { get; set; }
         [Parameter] public Action<EventAddInfo> OnEventRemove { get; set; }
         [Parameter] public Action<IEnumerable<Event>> OnEventsSet { get; set; }
+        // Todo: Event sources
         [Parameter] public string EventColor { get; set; }
         [Parameter] public string EventBackgroundColor { get; set; }
         [Parameter] public string EventBorderColor { get; set; }
         [Parameter] public string EventTextColor { get; set; }
-        [Parameter] public string EventDisplay { get; set; }
+        [Parameter] public EventDisplayOption? EventDisplay { get; set; }
         [Parameter] public DateTimeFormatter EventTimeFormat { get; set; }
         [Parameter] public bool? DisplayEventTime { get; set; }
         [Parameter] public bool? DisplayEventEnd { get; set; }
         [Parameter] public TimeSpan? NextDayThreshold { get; set; }
         [Parameter] public IEnumerable<string> EventOrder { get; set; }
+        [Parameter] public Func<Event, Event, int> OnGetEventOrder { get; set; }
         [Parameter] public bool? EventOrderStrict { get; set; }
         [Parameter] public bool? ProgressiveEventRendering { get; set; }
-        // [Parameter] public Func<EventRenderInfo, IEnumerable<string>> OnEventClassNames { get; set; } // Todo
-        // [Parameter] public Func<EventRenderInfo, object> OnEventContent { get; set; } // Todo: Replace object with proper type
+        // Todo: OnEventClassNames
+        // Todo: OnEventContent
         [Parameter] public Action<EventRenderInfo> OnEventDidMount { get; set; }
         [Parameter] public Action<EventRenderInfo> OnEventWillUnmount { get; set; }
+        [Parameter] public Action<EventClickInfo> OnEventClick { get; set; }
+        [Parameter] public Action<EventClickInfo> OnEventMouseEnter { get; set; }
+        [Parameter] public Action<EventClickInfo> OnEventMouseLeave { get; set; }
         [Parameter] public bool? Editable { get; set; }
         [Parameter] public bool? EventStartEditable { get; set; }
         [Parameter] public bool? EventResizableFromStart { get; set; }
         [Parameter] public bool? EventDurationEditable { get; set; }
         [Parameter] public bool? EventResourceEditable { get; set; }
         [Parameter] public bool? Droppable { get; set; }
-        [Parameter] public Action<EventClickInfo> OnEventClick { get; set; }
-        [Parameter] public Action<EventClickInfo> OnEventMouseEnter { get; set; }
-        [Parameter] public Action<EventClickInfo> OnEventMouseLeave { get; set; }
         [Parameter] public int? EventDragMinDistance { get; set; }
         [Parameter] public int? DragRevertDuration { get; set; }
         [Parameter] public bool? DragScroll { get; set; }
         [Parameter] public TimeSpan? SnapDuration { get; set; }
         [Parameter] public bool? AllDayMaintainDuration { get; set; }
         // Todo: Add FixedMirrorParent parameter (https://fullcalendar.io/docs/fixedMirrorParent)
-        [Parameter] public Func<Event, Event, bool> OnEventOverlap { get; set; }
+        [Parameter] public bool? EventOverlap { get; set; }
+        [Parameter] public Func<Event, Event, bool> OnGetEventOverlap { get; set; }
         [Parameter] public object EventConstraint { get; set; }
-        [Parameter] public Func<EventAllowInfo, Event, bool> OnEventAllow { get; set; }
-        [Parameter] public Func<object, bool> OnDropAccept { get; set; }
+        [Parameter] public Func<EventAllowInfo, Event, bool> OnGetEventAllow { get; set; }
+        [Parameter] public string DropAccept { get; set; }
+        [Parameter] public Func<object, bool> OnGetDropAccept { get; set; }
         [Parameter] public Action<EventDragInfo> OnEventDragStart { get; set; }
         [Parameter] public Action<EventDragInfo> OnEventDragStop { get; set; }
         [Parameter] public Action<EventDropInfo> OnEventDrop { get; set; }
@@ -191,226 +237,111 @@ namespace FullCalendarBlazor
         [Parameter] public Action<EventDragInfo> OnEventResizeStop { get; set; }
         [Parameter] public Action<EventResizeInfo> OnEventResize { get; set; }
         [Parameter] public int? DayMaxEventRows { get; set; }
+        [Parameter] public bool? LimitDayEventRowsToHeight { get; set; }
         [Parameter] public int? DayMaxEvents { get; set; }
+        [Parameter] public bool? LimitDayEventsToHeight { get; set; }
         [Parameter] public int? EventMaxStack { get; set; }
         [Parameter] public string MoreLinkClick { get; set; }
+        [Parameter] public Action<MoreLinkClickInfo> OnMoreLinkClick { get; set; }
         [Parameter] public DateTimeFormatter DayPopoverFormat { get; set; }
-        // [Parameter] public Func<int, string, IEnumerable<string>> OnMoreLinkClassNames { get; set; } // Todo
-        // [Parameter] public Func<int, string, object> OnMoreLinkContent { get; set; } // Todo: Replace object with proper type // Todo
-        [Parameter] public Action<int, string> OnMoreLinkDidMount { get; set; }
-        [Parameter] public Action<int, string> OnMoreLinkWillUnmount { get; set; }
+        // Todo: OnMoreLinkClassNames
+        // Todo: OnMoreLinkContent
+        [Parameter] public Action<MoreLinkInfo> OnMoreLinkDidMount { get; set; }
+        [Parameter] public Action<MoreLinkInfo> OnMoreLinkWillUnmount { get; set; }
 
         #endregion
 
         #region International
 
         [Parameter] public string Locale { get; set; }
-        [Parameter] public string Direction { get; set; }
+        [Parameter] public DirectionOption? Direction { get; set; }
         [Parameter] public DayOfWeek? FirstDay { get; set; }
+        [Parameter] public string TimeZone { get; set; }
 
         #endregion
 
-        // JSInvokable methods
+        // Public methods
 
         #region Overall Display
 
-        [JSInvokable] public void WindowResize(View view) => OnWindowResize?.Invoke(view); // Todo: Replace object with View type
+        public async Task UpdateSizeAsync() => await RuntimeService.ExecuteVoidMethodAsync(Id, "updateSize");
 
         #endregion
 
         #region Views
 
-        // [JSInvokable] public IEnumerable<string> AllDayClassNames(object arg) => OnAllDayClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
-        // [JSInvokable] public object AllDayContent(object arg) => OnAllDayContent?.Invoke(arg); // Todo
-        [JSInvokable] public void AllDayDidMount(string text) => OnAllDayDidMount?.Invoke(text);
-        [JSInvokable] public void AllDayWillUnmount(string text) => OnAllDayWillUnmount?.Invoke(text);
-        // [JSInvokable] public IEnumerable<string> NoEventsClassNames(object arg) => OnNoEventsClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
-        // [JSInvokable] public object NoEventsContent(object arg) => OnNoEventsContent?.Invoke(arg); // Todo
-        [JSInvokable] public void NoEventsDidMount(object el) => OnNoEventsDidMount?.Invoke(el);
-        [JSInvokable] public void NoEventsWillUnmount(object el) => OnNoEventsWillUnmount?.Invoke(el);
-        // [JSInvokable] public IEnumerable<string> ViewClassNames(object arg) => OnViewClassNames?.Invoke(arg) ?? Enumerable.Empty<string>(); // Todo
-        [JSInvokable] public void ViewDidMount(View view, object el) => OnViewDidMount?.Invoke(view, el);
-        [JSInvokable] public void ViewWillUnmount(View view, object el) => OnViewWillUnmount?.Invoke(view, el);
+        public async Task<View> GetViewAsync() => await RuntimeService.GetPropertyAsync<View>(Id, "view");
+        public async Task ChangeViewAsync(string viewOption) =>  await RuntimeService.ExecuteVoidMethodAsync(Id, "changeView", viewOption);
+        public async Task ChangeViewAsync(string viewOption, DateTime date) =>  await RuntimeService.ExecuteVoidMethodAsync(Id, "changeView", viewOption, date);
 
-        #endregion Views
+        #endregion
 
         #region Date and Time
 
-        [JSInvokable] public void DayHeaderDidMount(DayHeaderRenderInfo dayHeaderRenderInfo) => OnDayHeaderDidMount?.Invoke(dayHeaderRenderInfo);
-        [JSInvokable] public void DayHeaderWillUnmount(DayHeaderRenderInfo dayHeaderRenderInfo) => OnDayHeaderWillUnmount?.Invoke(dayHeaderRenderInfo);
-        [JSInvokable] public void DayCellDidMount(DayCellRenderInfo dayCellRenderInfo) => OnDayCellDidMount?.Invoke(dayCellRenderInfo);
-        [JSInvokable] public void DayCellWillUnmount(DayCellRenderInfo dayCellRenderInfo) => OnDayCellWillUnmount?.Invoke(dayCellRenderInfo);
-        [JSInvokable] public void SlotLabelDidMount(SlotRenderInfo slotRenderInfo) => OnSlotLabelDidMount?.Invoke(slotRenderInfo);
-        [JSInvokable] public void SlotLabelWillUnmount(SlotRenderInfo slotRenderInfo) => OnSlotLabelWillUnmount?.Invoke(slotRenderInfo);
-        [JSInvokable] public void SlotLaneDidMount(SlotRenderInfo slotRenderInfo) => OnSlotLaneDidMount?.Invoke(slotRenderInfo);
-        [JSInvokable] public void SlotLaneWillUnmount(SlotRenderInfo slotRenderInfo) => OnSlotLaneWillUnmount?.Invoke(slotRenderInfo);
-        [JSInvokable] public void DatesSet(DateInfo dateInfo) => OnDatesSet?.Invoke(dateInfo);
-        [JSInvokable] public void WeekNumberDidMount(string num, string text, DateTime date) => OnWeekNumberDidMount?.Invoke(num, text, date);
-        [JSInvokable] public void WeekNumberWillUnmount(string num, string text, DateTime date) => OnWeekNumberWillUnmount?.Invoke(num, text, date);
-        [JSInvokable] public void SelectAllow(SelectInfo selectInfo) => OnSelectAllow?.Invoke(selectInfo);
-        [JSInvokable] public void NowIndicatorDidMount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorDidMount?.Invoke(nowIndicatorInfo);
-        [JSInvokable] public void NowIndicatorWillUnmount(NowIndicatorInfo nowIndicatorInfo) => OnNowIndicatorWillUnmount?.Invoke(nowIndicatorInfo);
+        public async Task SetScrollToTimeAsync(TimeSpan duration) => await RuntimeService.ExecuteVoidMethodAsync(Id, "scrollToTime", duration);
+        public async Task GoToPrevAsync() => await RuntimeService.ExecuteVoidMethodAsync(Id, "prev");
+        public async Task GoToNextAsync() => await RuntimeService.ExecuteVoidMethodAsync(Id, "next");
+        public async Task GoToPrevYearAsync() => await RuntimeService.ExecuteVoidMethodAsync(Id, "prevYear");
+        public async Task GoToNextYearAsync() => await RuntimeService.ExecuteVoidMethodAsync(Id, "nextYear");
+        public async Task GoToTodayAsync() => await RuntimeService.ExecuteVoidMethodAsync(Id, "today");
+        public async Task GoToDateAsync(DateTime date) => await RuntimeService.ExecuteVoidMethodAsync(Id, "gotoDate", date);
+        public async Task IncrementDateAsync(TimeSpan duration) => await RuntimeService.ExecuteVoidMethodAsync(Id, "incrementDate", duration);
+        public async Task<DateTime> GetDateAsync() => await RuntimeService.ExecuteMethodAsync<DateTime>(Id, "getDate");
+        public async Task SelectPeriodAsync(DateTime start) => await RuntimeService.ExecuteVoidMethodAsync(Id, "select", start);
+        public async Task SelectPeriodAsync(DateTime start, DateTime end) => await RuntimeService.ExecuteVoidMethodAsync(Id, "select", start, end);
+        public async Task SelectPeriodAsync(CalendarSelectInfo calendarSelectInfo) => await RuntimeService.ExecuteVoidMethodAsync(Id, "select", calendarSelectInfo);
+        public async Task UnselectPeriodAsync() => await RuntimeService.ExecuteVoidMethodAsync(Id, "unselect");
 
         #endregion
 
         #region Event
 
-        [JSInvokable] public void EventAdd(EventAddInfo eventAddInfo) => OnEventAdd?.Invoke(eventAddInfo);
-        [JSInvokable] public void EventRemove(EventChangeInfo eventChangeInfo) => OnEventChange?.Invoke(eventChangeInfo);
-        [JSInvokable] public void EventChange(EventAddInfo eventRemoveInfo) => OnEventRemove?.Invoke(eventRemoveInfo);
-        [JSInvokable] public void EventsSet(IEnumerable<Event> events) => OnEventsSet?.Invoke(events);
-        // [JSInvokable] public IEnumerable<string> EventClassNames(EventRenderInfo eventRenderInfo) => OnEventClassNames?.Invoke(eventRenderInfo) ?? Enumerable.Empty<string>(); // Todo
-        // [JSInvokable] public object EventContent(EventRenderInfo eventRenderInfo) => OnEventContent?.Invoke(eventRenderInfo); // Todo
-        [JSInvokable] public void EventDidMount(EventRenderInfo eventRenderInfo) => OnEventDidMount?.Invoke(eventRenderInfo);
-        [JSInvokable] public void EventWillUnmount(EventRenderInfo eventRenderInfo) => OnEventWillUnmount?.Invoke(eventRenderInfo);
-        [JSInvokable] public void EventClick(EventClickInfo eventClickInfo) => OnEventClick?.Invoke(eventClickInfo);
-        [JSInvokable] public void EventMouseEnter(EventClickInfo mouseEnterInfo) => OnEventMouseEnter?.Invoke(mouseEnterInfo);
-        [JSInvokable] public void EventMouseLeave(EventClickInfo mouseLeaveInfo) => OnEventMouseLeave?.Invoke(mouseLeaveInfo);
-        [JSInvokable] public bool EventOverlap(Event stillEvent, Event movingEvent) => OnEventOverlap?.Invoke(stillEvent, movingEvent) ?? true;
-        [JSInvokable] public bool EventAllow(EventAllowInfo eventAllowInfo, Event draggedEvent) => OnEventAllow?.Invoke(eventAllowInfo, draggedEvent) ?? true;
-        [JSInvokable] public bool DropAccept(object draggableItem) => OnDropAccept?.Invoke(draggableItem) ?? true; // Todo: Replace object with DraggableItem type.
-        [JSInvokable] public void EventDragStart(EventDragInfo eventDragInfo) => OnEventDragStart?.Invoke(eventDragInfo);
-        [JSInvokable] public void EventDragStop(EventDragInfo eventDragInfo) => OnEventDragStop?.Invoke(eventDragInfo);
-        [JSInvokable] public void EventDrop(EventDropInfo eventDropInfo) => OnEventDrop?.Invoke(eventDropInfo);
-        [JSInvokable] public void Drop(DropInfo dropInfo) => OnDrop?.Invoke(dropInfo);
-        [JSInvokable] public void EventReceive(ExternalEventDropInfo eventReceiveInfo) => OnEventReceive?.Invoke(eventReceiveInfo);
-        [JSInvokable] public void EventLeave(ExternalEventDropInfo eventLeaveInfo) => OnEventLeave?.Invoke(eventLeaveInfo);
-        [JSInvokable] public void EventResizeStart(EventDragInfo eventResizeInfo) => OnEventResizeStart?.Invoke(eventResizeInfo);
-        [JSInvokable] public void EventResizeStop(EventDragInfo eventResizeInfo) => OnEventResizeStop?.Invoke(eventResizeInfo);
-        [JSInvokable] public void EventResize(EventResizeInfo eventResizeInfo) => OnEventResize?.Invoke(eventResizeInfo);
-        // [JSInvokable] public IEnumerable<string> MoreLinkClassNames(int num, string text) => OnMoreLinkClassNames?.Invoke(num, text) ?? Enumerable.Empty<string>(); // Todo
-        // [JSInvokable] public object MoreLinkContent(int num, string text) => OnMoreLinkContent?.Invoke(num, text); // Todo
-        [JSInvokable] public void MoreLinkDidMount(int num, string text) => OnMoreLinkDidMount?.Invoke(num, text);
-        [JSInvokable] public void MoreLinkWillUnmount(int num, string text) => OnMoreLinkWillUnmount?.Invoke(num, text);
+        public async Task<IEnumerable<Event>> GetEvents() => await RuntimeService.ExecuteMethodAsync<IEnumerable<Event>>(Id, "getEvents");
+        public async Task<Event> GetEventById(string id) => await RuntimeService.ExecuteMethodAsync<Event>(Id, "getEventById", id);
+        public async Task<Event> AddEvent(Event newEvent) => await RuntimeService.ExecuteMethodAsync<Event>(Id, "addEvent", newEvent);
+        public async Task<Event> AddEvent(Event newEvent, object source) => await RuntimeService.ExecuteMethodAsync<Event>(Id, "addEvent", newEvent, source); // Todo: Add proper type
+        public async Task SetEventProp(Event selectedEvent, string name, object value) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setProp", name, value);
+        public async Task SetEventExtendedProp(Event selectedEvent, string name, object value) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setExtendedProp", name, value);
+        public async Task SetEventStart(Event selectedEvent, DateTime date) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setStart", date);
+        public async Task SetEventStart(Event selectedEvent, DateTime date, bool maintainDuration) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setStart", date, new { maintainDuration });
+        public async Task SetEventEnd(Event selectedEvent, DateTime date) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setEnd", date);
+        public async Task SetEventDates(Event selectedEvent, DateTime start, DateTime end) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setDates", start, end);
+        public async Task SetEventDates(Event selectedEvent, DateTime start, DateTime end, bool allDay) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setDates", start, end, new { allDay });
+        public async Task SetEventAllDay(Event selectedEvent, bool allDay) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setAllDay", allDay);
+        public async Task SetEventAllDay(Event selectedEvent, bool allDay, bool maintainDuration) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setAllDay", allDay, new { maintainDuration });
+        public async Task MoveEventStart(Event selectedEvent, TimeSpan delta) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "moveStart", delta);
+        public async Task MoveEventEnd(Event selectedEvent, TimeSpan delta) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "moveEnd", delta);
+        public async Task MoveEventDates(Event selectedEvent, TimeSpan delta) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "moveDates");
+        public async Task FormatEventRange(Event selectedEvent, DateTimeFormatter formatConfig) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "formatRange", formatConfig);
+        public async Task RemoveEvent(Event selectedEvent) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "remove");
+        public async Task<IEnumerable<object>> GetEventResources(Event selectedEvent) => await RuntimeService.ExecuteEventMethodAsync<IEnumerable<object>>(Id, selectedEvent.Id, "getResources"); // Todo: Add proper type
+        public async Task SetEventResources(Event selectedEvent, IEnumerable<object> resources) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "setResources", resources); // Todo: Add proper type
+        public async Task EventToPlainObject(Event selectedEvent, bool collapseExtendedProps, bool collapseColor) => await RuntimeService.ExecuteVoidEventMethodAsync(Id, selectedEvent.Id, "toPlainObject", new { collapseExtendedProps, collapseColor });
 
         #endregion
 
         // Lifecycle methods
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            var data = new FullCalendarData
+            var calendarData = new ExpandoObject() as IDictionary<string, object>;
+            var calendarMethods = new List<(string, string)>();
+
+            foreach (var (property, jsName) in _calendarProperties)
             {
-                #region Overall Display
+                var value = property.GetValue(this);
+                if (value != null)
+                    calendarData.Add(jsName, value);
+            }
 
-                HeaderToolbar = HeaderToolbar,
-                FooterToolbar = FooterToolbar,
-                TitleFormat = TitleFormat,
-                TitleRangeSeparator = TitleRangeSeparator,
-                ButtonText = ButtonText,
-                ButtonIcons = ButtonIcons,
-                CustomButtons = CustomButtons,
-                ThemeSystem = ThemeSystem,
-                Height = Height,
-                ContentHeight = ContentHeight,
-                AspectRatio = AspectRatio,
-                ExpandRows = ExpandRows,
-                HandleWindowResize = HandleWindowResize,
-                WindowResizeDelay = WindowResizeDelay,
-                StickyHeaderDates = StickyHeaderDates,
-                StickyFooterScrollbar = StickyFooterScrollbar,
+            foreach (var (property, (jsName, dotnetName)) in _calendarMethods)
+            {
+                var value = property.GetValue(this);
+                InvokableService.GetType().GetProperty(property.Name)?.SetValue(InvokableService, value);
+                if (value != null)
+                    calendarMethods.Add((jsName, dotnetName));
+            }
 
-                #endregion
-
-                #region Views
-
-                FixedWeekCount = FixedWeekCount,
-                ShowNonCurrentDates = ShowNonCurrentDates,
-                EventMinHeight = EventMinHeight,
-                EventShortHeight = EventShortHeight,
-                SlotEventOverlap = SlotEventOverlap,
-                AllDaySlot = AllDaySlot,
-                ListDayFormat = ListDayFormat,
-                ListDaySideFormat = ListDaySideFormat,
-                InitialView = InitialView,
-
-                #endregion
-
-                #region Date and Time
-
-                Weekends = Weekends,
-                HiddenDays = HiddenDays,
-                DayHeaders = DayHeaders,
-                DayHeaderFormat = DayHeaderFormat,
-                DayMinWidth = DayMinWidth,
-                SlotDuration = SlotDuration,
-                SlotLabelInterval = SlotLabelInterval,
-                SlotLabelFormat = SlotLabelFormat,
-                SlotMinTime = SlotMinTime,
-                SlotMaxTime = SlotMaxTime,
-                ScrollTime = ScrollTime,
-                ScrollTimeReset = ScrollTimeReset,
-                InitialDate = InitialDate,
-                DateIncrement = DateIncrement,
-                DateAlignment = DateAlignment,
-                ValidRange = ValidRange,
-                NavLinks = NavLinks,
-                NavLinkDayClick = NavLinkDayClick,
-                NavLinkWeekClick = NavLinkWeekClick,
-                WeekNumbers = WeekNumbers,
-                WeekNumberCalculation = WeekNumberCalculation,
-                WeekText = WeekText,
-                WeekNumberFormat = WeekNumberFormat,
-                Selectable = Selectable,
-                SelectMirror = SelectMirror,
-                UnselectAuto = UnselectAuto,
-                UnselectCancel = UnselectCancel,
-                SelectOverlap = SelectOverlap,
-                SelectConstraint = SelectConstraint,
-                SelectMinDistance = SelectMinDistance,
-                NowIndicator = NowIndicator,
-                Now = Now,
-                BusinessHours = BusinessHours,
-
-                #endregion
-
-                #region Event
-
-                Events = Events,
-                DefaultAllDay = DefaultAllDay,
-                DefaultAllDayEventDuration = DefaultAllDayEventDuration,
-                DefaultTimedEventDuration = DefaultTimedEventDuration,
-                ForceEventDuration = ForceEventDuration,
-                EventColor = EventColor,
-                EventBackgroundColor = EventBackgroundColor,
-                EventBorderColor = EventBorderColor,
-                EventTextColor = EventTextColor,
-                EventDisplay = EventDisplay,
-                EventTimeFormat = EventTimeFormat,
-                DisplayEventTime = DisplayEventTime,
-                DisplayEventEnd = DisplayEventEnd,
-                NextDayThreshold = NextDayThreshold,
-                EventOrder = EventOrder,
-                EventOrderStrict = EventOrderStrict,
-                ProgressiveEventRendering = ProgressiveEventRendering,
-                Editable = Editable,
-                EventStartEditable = EventStartEditable,
-                EventResizableFromStart = EventResizableFromStart,
-                EventDurationEditable = EventDurationEditable,
-                EventResourceEditable = EventResourceEditable,
-                Droppable = Droppable,
-                EventDragMinDistance = EventDragMinDistance,
-                DragRevertDuration = DragRevertDuration,
-                DragScroll = DragScroll,
-                SnapDuration = SnapDuration,
-                AllDayMaintainDuration = AllDayMaintainDuration,
-                EventConstraint = EventConstraint,
-                DayMaxEventRows = DayMaxEventRows,
-                DayMaxEvents = DayMaxEvents,
-                EventMaxStack = EventMaxStack,
-                MoreLinkClick = MoreLinkClick,
-                DayPopoverFormat = DayPopoverFormat,
-
-                #endregion
-
-                #region International
-
-                Locale = Locale,
-                Direction = Direction,
-                FirstDay = FirstDay,
-
-                #endregion
-            };
-            await JsInterop.Render(Id, data, DotNetObjectReference.Create(this));
+            await RuntimeService.RenderAsync(calendarData, calendarMethods, DotNetObjectReference.Create(InvokableService));
         }
     }
 }

@@ -2,18 +2,19 @@
 {
     public class DateTimeFormatter
     {
-        public string Year { get; set; }
-        public string Month { get; set; }
-        public string Day { get; set; }
-        public string Weekday { get; set; }
-        public string Hour { get; set; }
-        public string Minute { get; set; }
-        public string Second { get; set; }
-        public string Hour12 { get; set; }
-        public string TimeZoneName { get; set; }
-        public string Week { get; set; }
-        public string Meridiem { get; set; }
-        public bool OmitZeroMinute { get; set; }
-        public bool OmitCommas { get; set; }
+        public DateTimeFormatterOption? Year { get; set; }
+        public DateTimeFormatterOption? Month { get; set; }
+        public DateTimeFormatterOption? Day { get; set; }
+        public DateTimeFormatterOption? Weekday { get; set; }
+        public DateTimeFormatterOption? Hour { get; set; }
+        public DateTimeFormatterOption? Minute { get; set; }
+        public DateTimeFormatterOption? Second { get; set; }
+        public bool? Hour12 { get; set; }
+        public DateTimeFormatterOption? TimeZoneName { get; set; }
+        public DateTimeFormatterOption? Week { get; set; }
+        public DateTimeFormatterOption? Meridiem { get; set; }
+        public bool? OmitZeroMinute { get; set; }
+        public bool? OmitCommas { get; set; }
+        public bool? OmitMeridiem { get; set; }
     }
 }

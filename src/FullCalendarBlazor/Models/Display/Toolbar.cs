@@ -1,9 +1,13 @@
-﻿namespace FullCalendarBlazor.Models.Display
+﻿using System.Collections.Generic;
+
+namespace FullCalendarBlazor.Models.Display
 {
     public class Toolbar
     {
-        public string Left { get; set; }
-        public string Center { get; set; }
-        public string Right { get; set; }
+        public IEnumerable<string> Start { get; set; }
+        public IEnumerable<string> End { get; set; }
+        public IEnumerable<string> Left { get; set; }
+        public IEnumerable<string> Right { get; set; }
+        public IEnumerable<string> Center { get; set; }
     }
 }

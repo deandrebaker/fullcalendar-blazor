@@ -2,6 +2,7 @@
 
 namespace FullCalendarBlazor.Models.Views
 {
+    // Todo: Add types to properties with object types.
     public class View
     {
         public string Type { get; set; }

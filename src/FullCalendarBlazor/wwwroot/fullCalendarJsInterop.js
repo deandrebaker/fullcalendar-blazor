@@ -1,75 +1,66 @@
 ﻿import {FullCalendar} from "./fullcalendar/main.min.js";
 
-export function render(elementId, serializedData, objRef) {
-    var calendarData = JSON.parse(serializedData);
+// Globals
 
-    // Calendar functions
+const calendars = {};
 
-    // region Overall Display
+export function render(serializedData, serializedMethods, objRef) {
+    const { id, ...calendarData} = JSON.parse(serializedData);
+    const calendarMethods = JSON.parse(serializedMethods);
 
-    calendarData.windowResize = (arg) => objRef.invokeMethod('WindowResize', arg.view);
+    // Transform Calendar Properties
 
-    // endregion
+    ["headerToolbar", "footerToolbar", "listDayFormat", "listDaySideFormat"]
+        .forEach(propName => {
+            const omitPropName = `omit${propName[0].toUpperCase()}${propName.substr(1)}`;
+            if (calendarData[omitPropName]) calendarData[propName] = false;
+            delete calendarData[omitPropName];
+        });
 
-    // region Views
+    if (calendarData.limitDayEventRowsToHeight) {
+        calendarData.dayMaxEventRows = true;
+        delete calendarData.limitDayEventRowsToHeight;
+    }
 
-    calendarData.allDayDidMount = (arg) => objRef.invokeMethod('AllDayDidMount', arg.text);
-    calendarData.allDayWillUnmount = (arg) => objRef.invokeMethod('AllDayWillUnmount', arg.text);
-    calendarData.noEventsDidMount = (arg) => objRef.invokeMethod('NoEventsDidMount', arg.el);
-    calendarData.noEventsWillUnmount = (arg) => objRef.invokeMethod('NoEventsWillUnmount', arg.el);
-    calendarData.viewDidMount = (arg) => objRef.invokeMethod('ViewDidMount', arg.view, arg.el);
-    calendarData.viewWillUnmount = (arg) => objRef.invokeMethod('ViewWillUnmount', arg.view, arg.el);
+    if (calendarData.limitDayEventsToHeight) {
+        calendarData.dayMaxEvents = true;
+        delete calendarData.limitDayEventsToHeight;
+    }
 
-    // endregion
+    ["headerToolbar", "footerToolbar"]
+        .forEach(propName => 
+            Object.getOwnPropertyNames(calendarData[propName] ?? {})
+                .forEach(innerPropName => 
+                    calendarData[propName][innerPropName] = calendarData[propName][innerPropName].join(''))
+        );
 
-    // region Date and Time
+    ["titleFormat", "listDayFormat", "listDaySideFormat", "dayHeaderFormat", "slotLabelFormat", "weekNumberFormat", "eventTimeFormat", "dayPopoverFormat"]
+        .forEach(propName => {
+            if (calendarData[propName]?.omitMeridiem) calendarData[propName].meridiem = false;
+            delete calendarData[propName]?.omitMeridiem;
+        });
 
-    calendarData.dayHeaderDidMount = (dayHeaderRenderInfo) => objRef.invokeMethod('DayHeaderDidMount', dayHeaderRenderInfo);
-    calendarData.dayHeaderWillUnmount = (dayHeaderRenderInfo) => objRef.invokeMethod('DayHeaderWillUnmount', dayHeaderRenderInfo);
-    calendarData.dayCellDidMount = (dayCellRenderInfo) => objRef.invokeMethod('DayCellDidMount', dayCellRenderInfo);
-    calendarData.dayCellWillUnmount = (dayCellRenderInfo) => objRef.invokeMethod('DayCellWillUnmount', dayCellRenderInfo);
-    calendarData.slotLabelDidMount = (slotRenderInfo) => objRef.invokeMethod('SlotLabelDidMount', slotRenderInfo);
-    calendarData.slotLabelWillUnmount = (slotRenderInfo) => objRef.invokeMethod('SlotLabelWillUnmount', slotRenderInfo);
-    calendarData.slotLaneDidMount = (slotRenderInfo) => objRef.invokeMethod('SlotLaneDidMount', slotRenderInfo);
-    calendarData.slotLaneWillUnmount = (slotRenderInfo) => objRef.invokeMethod('SlotLaneWillUnmount', slotRenderInfo);
-    calendarData.datesSet = (dateInfo) => objRef.invokeMethod('DatesSet', dateInfo);
-    calendarData.weekNumberDidMount = (num, text, date) => objRef.invokeMethod('WeekNumberDidMount', num, text, date);
-    calendarData.weekNumberWillUnmount = (num, text, date) => objRef.invokeMethod('WeekNumberWillUnmount', num, text, date);
-    calendarData.selectAllow = (selectInfo) => objRef.invokeMethod('SelectAllow', selectInfo);
-    calendarData.nowIndicatorDidMount = (nowIndicatorInfo) => objRef.invokeMethod('NowIndicatorDidMount', nowIndicatorInfo);
-    calendarData.nowIndicatorWillUnmount = (nowIndicatorInfo) => objRef.invokeMethod('NowIndicatorWillUnmount', nowIndicatorInfo);
+    calendarMethods.forEach(({item1: jsName, item2: dotnetName}) => calendarData[jsName] = (...args) => objRef.invokeMethod(dotnetName, ...args));
 
-    // endregion
+    const calendarElement = document.getElementById(id);
+    calendars[id] = new FullCalendar.Calendar(calendarElement, calendarData);
+    calendars[id].render();
+}
 
-    // region Events
+export function executeMethod(elementId, methodName, serializedArgs) {
+    const args = JSON.parse(serializedArgs);
+    return calendars[elementId][methodName](...args);
+}
 
-    calendarData.eventAdd = (eventAddInfo) => objRef.invokeMethod('EventAdd', eventAddInfo);
-    calendarData.eventChange = (eventChangeInfo) => objRef.invokeMethod('EventChange', eventChangeInfo);
-    calendarData.eventRemove = (eventRemoveInfo) => objRef.invokeMethod('EventRemove', eventRemoveInfo);
-    calendarData.eventsSet = (events) => objRef.invokeMethod('EventsSet', events);
-    calendarData.eventDidMount = (eventRenderInfo) => objRef.invokeMethod('EventDidMount', eventRenderInfo);
-    calendarData.eventWillUnmount = (eventRenderInfo) => objRef.invokeMethod('EventWillUnmount', eventRenderInfo);
-    calendarData.eventClick = (eventClickInfo) => objRef.invokeMethod('EventClick', eventClickInfo);
-    calendarData.eventMouseEnter = (mouseEnterInfo) => objRef.invokeMethod('EventMouseEnter', mouseEnterInfo);
-    calendarData.eventMouseLeave = (mouseLeaveInfo) => objRef.invokeMethod('EventMouseLeave', mouseLeaveInfo);
-    calendarData.eventOverlap = (stillEvent, movingEvent) => objRef.invokeMethod('EventOverlap', stillEvent, movingEvent);
-    calendarData.eventAllow = (eventAllowInfo, draggedEvent) => objRef.invokeMethod('EventAllow', eventAllowInfo, draggedEvent);
-    calendarData.dropAccept = (draggableEl) => objRef.invokeMethod('DropAccept', draggableEl);
-    calendarData.eventDragStart = (eventDragInfo) => objRef.invokeMethod('EventDragStart', eventDragInfo);
-    calendarData.eventDragStop = (eventDragInfo) => objRef.invokeMethod('EventDragStop', eventDragInfo);
-    calendarData.eventDrop = (eventDropInfo) => objRef.invokeMethod('EventDrop', eventDropInfo);
-    calendarData.drop = (dropInfo) => objRef.invokeMethod('Drop', dropInfo);
-    calendarData.eventReceive = (eventReceiveInfo) => objRef.invokeMethod('EventReceive', eventReceiveInfo);
-    calendarData.eventLeave = (eventLeaveInfo) => objRef.invokeMethod('EventLeave', eventLeaveInfo);
-    calendarData.eventResizeStart = (eventResizeInfo) => objRef.invokeMethod('EventResizeStart', eventResizeInfo);
-    calendarData.eventResizeStop = (eventResizeInfo) => objRef.invokeMethod('EventResizeStop', eventResizeInfo);
-    calendarData.eventResize = (eventResizeInfo) => objRef.invokeMethod('EventResize', eventResizeInfo);
-    calendarData.moreLinkDidMount = (num, text) => objRef.invokeMethod('MoreLinkDidMount', num, text);
-    calendarData.moreLinkWillUnmount = (num, text) => objRef.invokeMethod('MoreLinkWillUnmount', num, text);
+export function executeEventMethod(elementId, eventId, methodName, serializedArgs) {
+    const args = JSON.parse(serializedArgs)
+    return calendars[elementId].getEventById(eventId)[methodName](...args);
+}
 
-    // endregion
+export function getProperty(elementId, propName) {
+    return calendars[elementId][propName];
+}
 
-    var calendarElement = document.getElementById(elementId);
-    var calendar = new FullCalendar.Calendar(calendarElement, calendarData);
-    calendar.render();
+export function print(obj) {
+    console.log(obj);
 }

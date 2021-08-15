@@ -2,6 +2,7 @@
 
 namespace FullCalendarBlazor.Models.DateAndTime
 {
+    // Todo: Add types to properties with object types.
     public class DayCellRenderInfo
     {
         public DateTime Date { get; set; }
@@ -10,7 +11,7 @@ namespace FullCalendarBlazor.Models.DateAndTime
         public bool IsFuture { get; set; }
         public bool IsToday { get; set; }
         public bool IsOther { get; set; }
-        public object Resource { get; set; } // Todo
-        public object El { get; set; } // Todo
+        public object Resource { get; set; }
+        public object El { get; set; }
     }
 }
