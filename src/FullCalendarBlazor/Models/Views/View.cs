@@ -2,6 +2,7 @@
 
 namespace FullCalendarBlazor.Models.Views
 {
+    // Todo: Add types to properties with object types.
     public class View
     {
         public string Type { get; set; }
@@ -10,6 +11,6 @@ namespace FullCalendarBlazor.Models.Views
         public DateTime? ActiveEnd { get; set; }
         public DateTime? CurrentStart { get; set; }
         public DateTime? CurrentEnd { get; set; }
-        public object Calendar { get; set; } // Todo: Check that this points to JS object
+        public object Calendar { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace FullCalendarBlazor.Models.DateAndTime
 {
+    // Todo: Add types to properties with object types.
     public class SlotRenderInfo
     {
         public DateTime Date { get; set; }
@@ -9,7 +10,7 @@ namespace FullCalendarBlazor.Models.DateAndTime
         public bool? IsPast { get; set; }
         public bool? IsFuture { get; set; }
         public bool? IsToday { get; set; }
-        public object El { get; set; } // Todo
-        public object Level { get; set; } // Todo
+        public object El { get; set; }
+        public object Level { get; set; }
     }
 }

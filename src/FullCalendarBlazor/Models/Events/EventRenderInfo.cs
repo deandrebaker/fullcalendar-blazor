@@ -2,6 +2,7 @@
 
 namespace FullCalendarBlazor.Models.Events
 {
+    // Todo: Add types to properties with object types.
     public class EventRenderInfo
     {
         public Event Event { get; set; }
@@ -12,7 +13,7 @@ namespace FullCalendarBlazor.Models.Events
         public bool? IsPast { get; set; }
         public bool? IsFuture { get; set; }
         public bool? IsToday { get; set; }
-        public object El { get; set; } // Todo: Replace with object with proper type
+        public object El { get; set; }
         public View View { get; set; }
     }
 }

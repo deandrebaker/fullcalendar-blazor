@@ -3,7 +3,7 @@ using FullCalendarBlazor.Models.Views;
 
 namespace FullCalendarBlazor.Models.Events
 {
-    // Todo: Add proper types
+    // Todo: Add types to properties with object types.
     public class ExternalEventDropInfo
     {
         public Event Event { get; set; }
